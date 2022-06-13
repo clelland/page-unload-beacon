@@ -1,0 +1,216 @@
+<pre class="metadata">
+Title: Page Unload Beacon
+Status: UD
+ED: http://wicg.github.io/page-unload-beacon/
+Shortname: page-unload-beacon
+Level: 1
+Editor: Ian Clelland, Google
+Abstract: This document introduces an API for registering data to be sent to a predetermined server
+    at the point that a page is unloaded.
+Group: WebPerf
+Repository: https://repo.com/
+</pre>
+
+Introduction {#introduction}
+============================
+
+This is an introduction.
+
+
+Pending Beacon Framework {#pending-beacon-framework}
+====================================================
+
+Concepts {#concepts}
+--------------------
+
+A <dfn>pending beacon</dfn> represents a piece of data which has been
+registered with the user agent for later sending to an origin server.
+
+A [=pending beacon=] has a <dfn for="pending beacon">url</dfn>, which is a
+[=/URL=].
+
+A [=pending beacon=] has a <dfn for="pending beacon">method</dfn>, which is a
+string, which is initally <code>"POST"</code>.
+
+A [=pending beacon=] has a <dfn for="pending beacon">timeout</dfn>, which is
+either null or an integer, and which is initially null.
+
+A [=pending beacon=] has an <dfn for="pending beacon">is_pending</dfn> flag,
+which is a [=boolean=], which is initially true.
+
+A [=pending beacon=] has a <dfn for="pending beacon">payload</dfn>, which is
+either null or a JavaScript value which can be serialized into a JSON string.
+It is initially null.
+
+A [=Document=] has a <dfn for="Document">pending beacon set</dfn>, which is an
+[=ordered set=] of [=pending beacons=].
+
+Issue: Add worker beacons as well?
+
+Note: In this spec, the [=pending beacon set=] is associated with a [=Document=].
+In an actual implementation, this set will likely need to be stored in the user
+agent, separate from the document itself, in order to be able to send beacons
+when the document is destroyed (either by being unloaded, or because of a crash).
+
+Updating beacons {#updating-beacons}
+------------------------------------
+
+To <dfn for="pending beacon">set the url</dfn> of a pending beacon |beacon| to a [=/URL=] |url|:
+1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+1. If |url| is not a valid [=/URL=], return false.
+1. If |url| is not a [=potentially trustworthy URL=], return false.
+1. Set |beacon|'s [=pending beacon/url=] to |url|.
+1. Return true.
+
+To <dfn for="pending beacon">set the method</dfn> of a pending beacon |beacon| to a string |method|:
+1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+1. If |method| is not a case-insensitive match for <code>"GET"</code> or <code>"POST"</code>, return false.
+1. Set |beacon|'s [=pending beacon/method=] to |method|.
+1. Return true.
+
+To <dfn for="pending beacon">set the timeout</dfn> of a pending beacon |beacon| to an integer |timeout|:
+1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+1. If |timeout| is negative, return false.
+1. Set |beacon|'s [=pending beacon/timeout=] to |timeout|.
+1. Return true.
+
+To <dfn for="pending beacon">set the payload</dfn> of a pending beacon to a JavaScript object |payload|,
+1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+1. Check data type or return false.
+1. Set |beacon|'s [=pending beacon/payload=] to |payload|.
+1. Return true.
+
+To cancel a pending beacon,
+
+Sending beacons {#sending-beacons}
+----------------------------------
+
+To <dfn>send a document's beacons</dfn>, given a Document |document|, run these steps:
+
+1. For each pending beacon in |document|'s [=pending beacon set=],
+  1. Send beacon
+
+To <dfn>send a queued pending beacon</dfn> |beacon|, run these steps:
+
+Note: This is written as though Fetch were used as the underlying mechanism.
+However, since these are sent out-of-band, an implementation might not use the
+actual web-exposed Fetch API, and may instead use the underlying HTTP
+primitives directly.
+
+To send a pending beacon,
+ - Check permission
+ - Cookies
+ - CORS
+ - Switch on method
+
+POST:
+
+GET:
+
+
+Integration with HTML {#integration}
+====================================
+
+Note: The following sections modify the [[HTML]] standard to enable sending of beacons automatically by the user agent. These should be removed from this spec as appropriate changes are made to [[HTML]].
+
+When a document with a non-empty pending beacon set is to be discarded, send the document's pending beacons.
+
+When a process hosting a document with a non-empty pending beacon set crashes, send the document's pending beacons.
+
+
+When a document is to become hidden (visibility state change), run these steps:
+
+1. For each pending beacon in document's pending beacon set,
+  1. If beacon's timeout is not null, start a timer to run a task in timeout ms.
+    Note: The user agent may choose to coalesce multiple timers in order to send multiple beacons
+    at the same time.
+  1. When the timer expires, send the beacon.
+
+
+The PendingBeacon interface {#pendingbeacon-interface}
+======================================================
+
+<pre class=idl>
+dictionary PendingBeaconOptions {
+    DOMString method = "POST";
+    unsigned long pageHideTimeout;
+};
+
+[Exposed=(Window, Worker)]
+interface PendingBeacon {
+    constructor(DOMString url, PendingBeaconOptions options);
+
+    attribute DOMString url;
+    attribute DOMString method;
+    attribute unsigned long pageHideTimeout;
+    readonly attribute boolean isPending;
+
+    undefined deactivate();
+    undefined setData(object data);
+    undefined sendNow();
+};
+</pre>
+
+A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>, which is a [=pending beacon=].
+
+The <dfn constructor for="PendingBeacon" lt="PendingBeacon(url, options)"><code>new PendingBeacon(|url|, |options|)</code></dfn> steps are:
+
+1. Let |beacon| be a new [=pending beacon=].
+1. Set [=this=]'s [=PendingBeacon/beacon=] to |beacon|.
+1. Set [=this=]'s [=PendingBeacon/url=] to |url|.
+1. Set [=this=]'s [=PendingBeacon/method=] to |options|'s {{PendingBeaconOptions/method}}.
+1. If |options| has a {{PendingBeaconOptions/pageHideTimeout}} member, then set [=this=]'s
+    [=PendingBeacon/pageHideTimeout=] to |options|'s {{PendingBeaconOptions/pageHideTimeout}}.
+1. Insert |beacon| into the user agent's pending beacon set.
+
+The <dfn attribute for="PendingBeacon"><code>url</code></dfn> getter steps are to return this's beacon's url.
+
+The {{PendingBeacon/url}} setter steps are:
+1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+1. Let |urlString| be the argument to the setter.
+1. If |urlString| is not a [=valid URL string=], throw an exception.
+1. Let |base| be the [=document base URL=] of [=this=]'s [=relevant settings object=]'s [=global object=]'s [=associated Document=].
+1. Let |url| be the result of running the [=URL parser=] on |urlString| and |base|.
+1. if |url| is failure, throw an exception.
+1. If the result of <a lt="set the url">setting</a> |beacon|'s [=pending beacon/url=] to |url| is false, throw an exception.
+
+The <dfn attribute for="PendingBeacon">method</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/method=].
+
+The {{PendingBeacon/method}} setter steps are:
+1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+1. Let |method| be the argument to the setter.
+1. If the result of <a lt="set the method">setting</a> |beacon|'s [=pending beacon/method=] to |method| is false, throw an exception.
+1. set appropriate in-browser data srtucture as well?
+
+The <dfn attribute for="PendingBeacon"><code>pageHideTimeout</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/timeout=].
+
+The {{PendingBeacon/pageHideTimeout}} setter steps are:
+1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+1. Let |timeout| be the argument to the setter.
+1. If |timeout| is not a non-negative integer, throw an exception.
+1. If the result of <a lt="set the timeout">setting</a> |beacon|'s [=pending beacon/timeout=] to |timeout| is false, throw an exception.
+
+The <dfn attribute for="PendingBeacon"><code>isPending</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] flag.
+
+The <dfn method for="PendingBeacon"><code>deactivate()</code></dfn> steps are:
+1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+1. Set [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] to false.
+
+The <dfn method for="PendingBeacon"><code>setData(|data|)</code></dfn> steps are:
+1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+1. If the result of <a lt="set the payload">setting</a> |beacon|'s [=pending beacon/payload=] to |data| is false, throw an exception.
+
+The <dfn method for="PendingBeacon"><code>sendNow()</code></dfn> steps are:
+1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+1. queue an immediate send
+
+
+
+Privacy {#privacy}
+==================
+
+* When the network changes, drop all queued beacons
+
+* Clear-site-data?
+
+* Incognito?
