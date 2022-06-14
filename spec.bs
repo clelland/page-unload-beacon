@@ -8,7 +8,7 @@ Editor: Ian Clelland, Google
 Abstract: This document introduces an API for registering data to be sent to a predetermined server
     at the point that a page is unloaded.
 Group: WebPerf
-Repository: https://repo.com/
+Repository: clelland/page-unload-beacon
 </pre>
 
 Introduction {#introduction}
@@ -97,15 +97,62 @@ However, since these are sent out-of-band, an implementation might not use the
 actual web-exposed Fetch API, and may instead use the underlying HTTP
 primitives directly.
 
-To send a pending beacon,
- - Check permission
- - Cookies
- - CORS
- - Switch on method
+1. Set |beacon|'s [=pending beacon/is_pending=] flag to false.
+1. Check permission.
+1. Let |origin| be...
+1. Let |corsMode| be...
+1. If |beacon|'s [=pending beacon/method=] is "GET", then send |beacon| over GET.
+1. Else send |beacon| over POST.
 
-POST:
+To <dfn>send a pending beacon over GET</dfn>, given a pending beacon |beacon|:
 
-GET:
+1. Let |pairs| be the result of converting to a list of name-value pairs with |beacon|'s [=pending beacon/payload=].
+1. Let |query| be the result of running the application/x-www-form-urlencoded serializer with pairs and encoding.
+1. Set |beacon|'s [=pending beacon/url=]'s query component to |query|.
+1. Let |req| be a new [=request=] initialized as follows:
+
+    : method
+    :: <code>GET</code>
+    : client
+    :: The [=entry settings object=]
+    : url
+    :: |beacon|'s [=pending beacon/url=]
+    : header list
+    :: headerList
+    : origin
+    :: |origin|
+    : credentials mode
+    :: same-origin
+
+1. Fetch |req|.
+
+
+To <dfn>send a pending beacon over POST</dfn>, given a pending beacon |beacon|:
+
+1. Let |transmittedData| be the result of serializing |beacon|'s [=pending beacon/payload=].
+1. Let |req| be a new [=request=] initialized as follows:
+
+    : method
+    :: <code>POST</code>
+    : client
+    :: The [=entry settings object=]
+    : url
+    :: |beacon|'s [=pending beacon/url=]
+    : header list
+    :: headerList
+    : origin
+    :: |origin|
+    : keep-alive flag
+    :: true
+    : body
+    :: transmittedData
+    : mode
+    :: corsMode
+    : credentials mode
+    :: same-origin
+
+1. Fetch |req|.
+
 
 
 Integration with HTML {#integration}
@@ -157,10 +204,10 @@ The <dfn constructor for="PendingBeacon" lt="PendingBeacon(url, options)"><code>
 
 1. Let |beacon| be a new [=pending beacon=].
 1. Set [=this=]'s [=PendingBeacon/beacon=] to |beacon|.
-1. Set [=this=]'s [=PendingBeacon/url=] to |url|.
-1. Set [=this=]'s [=PendingBeacon/method=] to |options|'s {{PendingBeaconOptions/method}}.
+1. Set [=this=]'s {{PendingBeacon/url}} to |url|.
+1. Set [=this=]'s {{PendingBeacon/method}} to |options|'s {{PendingBeaconOptions/method}}.
 1. If |options| has a {{PendingBeaconOptions/pageHideTimeout}} member, then set [=this=]'s
-    [=PendingBeacon/pageHideTimeout=] to |options|'s {{PendingBeaconOptions/pageHideTimeout}}.
+    {{PendingBeacon/pageHideTimeout}} to |options|'s {{PendingBeaconOptions/pageHideTimeout}}.
 1. Insert |beacon| into the user agent's pending beacon set.
 
 The <dfn attribute for="PendingBeacon"><code>url</code></dfn> getter steps are to return this's beacon's url.
@@ -169,7 +216,7 @@ The {{PendingBeacon/url}} setter steps are:
 1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
 1. Let |urlString| be the argument to the setter.
 1. If |urlString| is not a [=valid URL string=], throw an exception.
-1. Let |base| be the [=document base URL=] of [=this=]'s [=relevant settings object=]'s [=global object=]'s [=associated Document=].
+1. Let |base| be the [=entry settings object=]'s [=API base URL=].
 1. Let |url| be the result of running the [=URL parser=] on |urlString| and |base|.
 1. if |url| is failure, throw an exception.
 1. If the result of <a lt="set the url">setting</a> |beacon|'s [=pending beacon/url=] to |url| is false, throw an exception.
@@ -180,7 +227,6 @@ The {{PendingBeacon/method}} setter steps are:
 1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
 1. Let |method| be the argument to the setter.
 1. If the result of <a lt="set the method">setting</a> |beacon|'s [=pending beacon/method=] to |method| is false, throw an exception.
-1. set appropriate in-browser data srtucture as well?
 
 The <dfn attribute for="PendingBeacon"><code>pageHideTimeout</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/timeout=].
 
