@@ -129,9 +129,10 @@ directly.
 <div algorithm>
   To <dfn>send a pending beacon over GET</dfn>, given a pending beacon |beacon|:
 
-  1. Let |pairs| be the result of converting to a list of name-value pairs with |beacon|'s [=pending beacon/payload=].
-  1. Let |query| be the result of running the application/x-www-form-urlencoded serializer with pairs and encoding.
-  1. Set |beacon|'s [=pending beacon/url=]'s query component to |query|.
+  1. Let |pairs| be the [=/list=]  « ("data", |beacon|'s [=pending beacon/payload=]) ».
+  1. Let |query| be the result of running the [=urlencoded serializer=] with |pairs|.
+  1. Let |url| be a clone of |beacon|'s [=pending beacon/url=].
+  1. Set |url|'s query component to |query|.
   1. Let |req| be a new [=/request=] initialized as follows:
 
       : method
@@ -139,9 +140,7 @@ directly.
       : client
       :: The <a spec="html">entry settings object</a>
       : url
-      :: |beacon|'s [=pending beacon/url=]
-      : header list
-      :: headerList
+      :: |url|
       : credentials mode
       :: same-origin
 
@@ -153,8 +152,8 @@ directly.
   To <dfn>send a pending beacon over POST</dfn>, given a pending beacon |beacon|:
 
   1. Let |transmittedData| be the result of serializing |beacon|'s [=pending beacon/payload=].
-  1. Let |origin| be...
-  1. Let |corsMode| be...
+  1. Let |origin| be the <a spec="html">entry settings object</a>'s [=/origin=]
+  1. Let |corsMode| be <code>"cors"</code>.
   1. Let |req| be a new [=/request=] initialized as follows:
 
       : method
@@ -170,7 +169,7 @@ directly.
       : keep-alive flag
       :: true
       : body
-      :: transmittedData
+      :: |transmittedData|
       : mode
       :: |corsMode|
       : credentials mode
@@ -319,7 +318,7 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
   The <dfn method for="PendingBeacon"><code>setData(|data|)</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
   1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
-  1. Let (|body|, |contentType|) be the result of <a for="BodyInit" lt="extract">extracting</a> a [=body with type=] from |data| with keepalive set to true.
+  1. Let (|body|, <var ignore>contentType</var>) be the result of <a for="BodyInit" lt="extract">extracting</a> a [=body with type=] from |data| with keepalive set to true.
   1. Let |bytes| be the [=byte sequence=] obtained by reading |body|'s stream.
   1. If the result of <a lt="set the payload">setting</a> |beacon|'s [=pending beacon/payload=] to |bytes| is false, throw an exception.
 
@@ -327,7 +326,8 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>sendNow()</code></dfn> steps are:
-  1. If [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
   1. Call [=send a queued pending beacon=] with |beacon|.
 
 </div>

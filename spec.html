@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="http://wicg.github.io/page-unload-beacon/" rel="canonical">
-  <meta content="4778eafc1641d3bb83426a2604999965bc277f4f" name="document-revision">
+  <meta content="769f204b2c1256e43035e8b3ea61e660b26eedd0" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -782,11 +782,13 @@ directly.</p>
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="send-a-pending-beacon-over-get">send a pending beacon over GET</dfn>, given a pending beacon <var>beacon</var>: 
     <ol>
      <li data-md>
-      <p>Let <var>pairs</var> be the result of converting to a list of name-value pairs with <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload①">payload</a>.</p>
+      <p>Let <var>pairs</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list">list</a> « ("data", <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload①">payload</a>) ».</p>
      <li data-md>
-      <p>Let <var>query</var> be the result of running the application/x-www-form-urlencoded serializer with pairs and encoding.</p>
+      <p>Let <var>query</var> be the result of running the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-urlencoded-serializer" id="ref-for-concept-urlencoded-serializer">urlencoded serializer</a> with <var>pairs</var>.</p>
      <li data-md>
-      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url①">url</a>'s query component to <var>query</var>.</p>
+      <p>Let <var>url</var> be a clone of <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url①">url</a>.</p>
+     <li data-md>
+      <p>Set <var>url</var>’s query component to <var>query</var>.</p>
      <li data-md>
       <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> initialized as follows:</p>
       <dl>
@@ -798,10 +800,7 @@ directly.</p>
         <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object">entry settings object</a></p>
        <dt data-md>url
        <dd data-md>
-        <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url②">url</a></p>
-       <dt data-md>header list
-       <dd data-md>
-        <p>headerList</p>
+        <p><var>url</var></p>
        <dt data-md>credentials mode
        <dd data-md>
         <p>same-origin</p>
@@ -816,9 +815,9 @@ directly.</p>
      <li data-md>
       <p>Let <var>transmittedData</var> be the result of serializing <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload②">payload</a>.</p>
      <li data-md>
-      <p>Let <var>origin</var> be...</p>
+      <p>Let <var>origin</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object①">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin" id="ref-for-concept-origin">origin</a></p>
      <li data-md>
-      <p>Let <var>corsMode</var> be...</p>
+      <p>Let <var>corsMode</var> be <code>"cors"</code>.</p>
      <li data-md>
       <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request①">request</a> initialized as follows:</p>
       <dl>
@@ -827,10 +826,10 @@ directly.</p>
         <p><code>POST</code></p>
        <dt data-md>client
        <dd data-md>
-        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object①">entry settings object</a></p>
+        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object②">entry settings object</a></p>
        <dt data-md>url
        <dd data-md>
-        <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url③">url</a></p>
+        <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url②">url</a></p>
        <dt data-md>header list
        <dd data-md>
         <p>headerList</p>
@@ -842,7 +841,7 @@ directly.</p>
         <p>true</p>
        <dt data-md>body
        <dd data-md>
-        <p>transmittedData</p>
+        <p><var>transmittedData</var></p>
        <dt data-md>mode
        <dd data-md>
         <p><var>corsMode</var></p>
@@ -919,7 +918,7 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
       <p>Insert <var>beacon</var> into the user agent’s pending beacon set.</p>
     </ol>
    </div>
-   <div class="algorithm" data-algorithm="url" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-url"><code>url</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url④">url</a>. </div>
+   <div class="algorithm" data-algorithm="url" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-url"><code>url</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url③">url</a>. </div>
    <div class="algorithm" data-algorithm="set url" data-algorithm-for="PendingBeacon">
      The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url②">url</a></code> setter steps are: 
     <ol>
@@ -932,13 +931,13 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
      <li data-md>
       <p>If <var>urlString</var> is not a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-url-string" id="ref-for-valid-url-string">valid URL string</a>, throw an exception.</p>
      <li data-md>
-      <p>Let <var>base</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object②">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#api-base-url" id="ref-for-api-base-url">API base URL</a>.</p>
+      <p>Let <var>base</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object③">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#api-base-url" id="ref-for-api-base-url">API base URL</a>.</p>
      <li data-md>
       <p>Let <var>url</var> be the result of running the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-parser" id="ref-for-concept-url-parser">URL parser</a> on <var>urlString</var> and <var>base</var>.</p>
      <li data-md>
       <p>if <var>url</var> is failure, throw an exception.</p>
      <li data-md>
-      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-url" id="ref-for-pending-beacon-set-the-url">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url⑤">url</a> to <var>url</var> is false, throw an exception.</p>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-url" id="ref-for-pending-beacon-set-the-url">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url④">url</a> to <var>url</var> is false, throw an exception.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="method" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-method"><code>method</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑥">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon③">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method②">method</a>. </div>
@@ -1002,7 +1001,9 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
      The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-sendnow"><code>sendNow()</code></dfn> steps are: 
     <ol>
      <li data-md>
-      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①③">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①⓪">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①④">is_pending</a> is not true, throw an exception.</p>
+      <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①③">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①⓪">beacon</a>.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①④">is_pending</a> is not true, throw an exception.</p>
      <li data-md>
       <p>Call <a data-link-type="dfn" href="#send-a-queued-pending-beacon" id="ref-for-send-a-queued-pending-beacon②">send a queued pending beacon</a> with <var>beacon</var>.</p>
     </ol>
@@ -1139,8 +1140,14 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
   <aside class="dfn-panel" data-for="term-for-entry-settings-object">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-entry-settings-object">2.3. Sending beacons</a> <a href="#ref-for-entry-settings-object①">(2)</a>
-    <li><a href="#ref-for-entry-settings-object②">4. The PendingBeacon interface</a>
+    <li><a href="#ref-for-entry-settings-object">2.3. Sending beacons</a> <a href="#ref-for-entry-settings-object①">(2)</a> <a href="#ref-for-entry-settings-object②">(3)</a>
+    <li><a href="#ref-for-entry-settings-object③">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-origin">
+   <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">https://html.spec.whatwg.org/multipage/origin.html#concept-origin</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-origin">2.3. Sending beacons</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-boolean">
@@ -1155,6 +1162,12 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
     <li><a href="#ref-for-byte-sequence">2.1. Concepts</a>
     <li><a href="#ref-for-byte-sequence①">2.2. Updating beacons</a>
     <li><a href="#ref-for-byte-sequence②">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-list">
+   <a href="https://infra.spec.whatwg.org/#list">https://infra.spec.whatwg.org/#list</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-list">2.3. Sending beacons</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ordered-set">
@@ -1180,6 +1193,12 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
    <a href="https://url.spec.whatwg.org/#concept-url-parser">https://url.spec.whatwg.org/#concept-url-parser</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-url-parser">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-urlencoded-serializer">
+   <a href="https://url.spec.whatwg.org/#concept-urlencoded-serializer">https://url.spec.whatwg.org/#concept-urlencoded-serializer</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-urlencoded-serializer">2.3. Sending beacons</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-valid-url-string">
@@ -1249,12 +1268,14 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
     <ul>
      <li><span class="dfn-paneled" id="term-for-api-base-url">api base url</span>
      <li><span class="dfn-paneled" id="term-for-entry-settings-object">entry settings object</span>
+     <li><span class="dfn-paneled" id="term-for-concept-origin">origin</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-boolean">boolean</span>
      <li><span class="dfn-paneled" id="term-for-byte-sequence">byte sequence</span>
+     <li><span class="dfn-paneled" id="term-for-list">list</span>
      <li><span class="dfn-paneled" id="term-for-ordered-set">ordered set</span>
     </ul>
    <li>
@@ -1267,6 +1288,7 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
     <ul>
      <li><span class="dfn-paneled" id="term-for-concept-url">url</span>
      <li><span class="dfn-paneled" id="term-for-concept-url-parser">url parser</span>
+     <li><span class="dfn-paneled" id="term-for-concept-urlencoded-serializer">urlencoded serializer</span>
      <li><span class="dfn-paneled" id="term-for-valid-url-string">valid url string</span>
     </ul>
    <li>
@@ -1340,8 +1362,8 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
    <b><a href="#pending-beacon-url">#pending-beacon-url</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-pending-beacon-url">2.2. Updating beacons</a>
-    <li><a href="#ref-for-pending-beacon-url①">2.3. Sending beacons</a> <a href="#ref-for-pending-beacon-url②">(2)</a> <a href="#ref-for-pending-beacon-url③">(3)</a>
-    <li><a href="#ref-for-pending-beacon-url④">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-url⑤">(2)</a>
+    <li><a href="#ref-for-pending-beacon-url①">2.3. Sending beacons</a> <a href="#ref-for-pending-beacon-url②">(2)</a>
+    <li><a href="#ref-for-pending-beacon-url③">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-url④">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="pending-beacon-method">
