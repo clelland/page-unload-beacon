@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="http://wicg.github.io/page-unload-beacon/" rel="canonical">
-  <meta content="8189c03fe93f5798ef7e5c3fa91e55bca19d21a6" name="document-revision">
+  <meta content="4778eafc1641d3bb83426a2604999965bc277f4f" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -385,6 +385,17 @@ c-[vg] { color: #0077aa } /* Name.Variable.Global */
 c-[vi] { color: #0077aa } /* Name.Variable.Instance */
 c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </style>
+<style>/* style-var-click-highlighting */
+
+    var { cursor: pointer; }
+    var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
+    var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
+    var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
+    var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
+    var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
+    var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
+    var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
+    </style>
 <style>/* style-darkmode */
 
 @media (prefers-color-scheme: dark) {
@@ -579,7 +590,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Page Unload Beacon</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#UD">Unofficial Proposal Draft</a>, <time class="dt-updated" datetime="2022-06-14">14 June 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#UD">Unofficial Proposal Draft</a>, <time class="dt-updated" datetime="2022-06-15">15 June 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -669,9 +680,7 @@ string, which is initally <code>"POST"</code>.</p>
 either null or an integer, and which is initially null.</p>
    <p>A <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon③">pending beacon</a> has an <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-is_pending">is_pending</dfn> flag,
 which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#boolean" id="ref-for-boolean">boolean</a>, which is initially true.</p>
-   <p>A <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon④">pending beacon</a> has a <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-payload">payload</dfn>, which is
-either null or a JavaScript value which can be serialized into a JSON string.
-It is initially null.</p>
+   <p>A <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon④">pending beacon</a> has a <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-payload">payload</dfn>, which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence">byte sequence</a>.  It is initially empty.</p>
    <p>A <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document">Document</a> has a <dfn class="dfn-paneled" data-dfn-for="Document" data-dfn-type="dfn" data-noexport id="document-pending-beacon-set">pending beacon set</dfn>, which is an <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set">ordered set</a> of <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑤">pending beacons</a>.</p>
    <p class="issue" id="issue-fdb03e89"><a class="self-link" href="#issue-fdb03e89"></a> Add worker beacons as well?</p>
    <p class="note" role="note"><span>Note:</span> In this spec, the <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set">pending beacon set</a> is associated with a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①">Document</a>.
@@ -679,166 +688,199 @@ In an actual implementation, this set will likely need to be stored in the user
 agent, separate from the document itself, in order to be able to send beacons
 when the document is destroyed (either by being unloaded, or because of a crash).</p>
    <h3 class="heading settled" data-level="2.2" id="updating-beacons"><span class="secno">2.2. </span><span class="content">Updating beacons</span><a class="self-link" href="#updating-beacons"></a></h3>
-   <p>To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-url">set the url</dfn> of a pending beacon <var>beacon</var> to a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> <var>url</var>:</p>
-   <ol>
-    <li data-md>
-     <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending">is_pending</a> is false, return false.</p>
-    <li data-md>
-     <p>If <var>url</var> is not a valid <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url②">URL</a>, return false.</p>
-    <li data-md>
-     <p>If <var>url</var> is not a <a data-link-type="dfn" href="https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url" id="ref-for-potentially-trustworthy-url">potentially trustworthy URL</a>, return false.</p>
-    <li data-md>
-     <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url">url</a> to <var>url</var>.</p>
-    <li data-md>
-     <p>Return true.</p>
-   </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-method">set the method</dfn> of a pending beacon <var>beacon</var> to a string <var>method</var>:</p>
-   <ol>
-    <li data-md>
-     <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①">is_pending</a> is false, return false.</p>
-    <li data-md>
-     <p>If <var>method</var> is not a case-insensitive match for <code>"GET"</code> or <code>"POST"</code>, return false.</p>
-    <li data-md>
-     <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method">method</a> to <var>method</var>.</p>
-    <li data-md>
-     <p>Return true.</p>
-   </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-timeout">set the timeout</dfn> of a pending beacon <var>beacon</var> to an integer <var>timeout</var>:</p>
-   <ol>
-    <li data-md>
-     <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending②">is_pending</a> is false, return false.</p>
-    <li data-md>
-     <p>If <var>timeout</var> is negative, return false.</p>
-    <li data-md>
-     <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout">timeout</a> to <var>timeout</var>.</p>
-    <li data-md>
-     <p>Return true.</p>
-   </ol>
-   <p>To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-payload">set the payload</dfn> of a pending beacon to a JavaScript object <var>payload</var>,</p>
-   <ol>
-    <li data-md>
-     <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending③">is_pending</a> is false, return false.</p>
-    <li data-md>
-     <p>Check data type or return false.</p>
-    <li data-md>
-     <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload">payload</a> to <var>payload</var>.</p>
-    <li data-md>
-     <p>Return true.</p>
-   </ol>
-   <p>To cancel a pending beacon,</p>
+   <div class="algorithm" data-algorithm="set the url" data-algorithm-for="pending beacon">
+     To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-url">set the url</dfn> of a pending beacon <var>beacon</var> to a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> <var>url</var>: 
+    <ol>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending">is_pending</a> is false, return false.</p>
+     <li data-md>
+      <p>If <var>url</var> is not a valid <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url②">URL</a>, return false.</p>
+     <li data-md>
+      <p>If <var>url</var> is not a <a data-link-type="dfn" href="https://w3c.github.io/webappsec-secure-contexts/#potentially-trustworthy-url" id="ref-for-potentially-trustworthy-url">potentially trustworthy URL</a>, return false.</p>
+     <li data-md>
+      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url">url</a> to <var>url</var>.</p>
+     <li data-md>
+      <p>Return true.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="set the method" data-algorithm-for="pending beacon">
+     To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-method">set the method</dfn> of a pending beacon <var>beacon</var> to a string <var>method</var>: 
+    <ol>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①">is_pending</a> is false, return false.</p>
+     <li data-md>
+      <p>If <var>method</var> is not a case-insensitive match for <code>"GET"</code> or <code>"POST"</code>, return false.</p>
+     <li data-md>
+      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method">method</a> to <var>method</var>.</p>
+     <li data-md>
+      <p>Return true.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="set the timeout" data-algorithm-for="pending beacon">
+     To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-timeout">set the timeout</dfn> of a pending beacon <var>beacon</var> to an integer <var>timeout</var>: 
+    <ol>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending②">is_pending</a> is false, return false.</p>
+     <li data-md>
+      <p>If <var>timeout</var> is negative, return false.</p>
+     <li data-md>
+      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout">timeout</a> to <var>timeout</var>.</p>
+     <li data-md>
+      <p>Return true.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="set the payload" data-algorithm-for="pending beacon">
+     To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-payload">set the payload</dfn> of a pending beacon <var>beacon</var> to a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence①">byte sequence</a> <var>payload</var>, 
+    <ol>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending③">is_pending</a> is false, return false.</p>
+     <li data-md>
+      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload">payload</a> to <var>payload</var>.</p>
+     <li data-md>
+      <p>Return true.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="cancel" data-algorithm-for="pending beacon">
+     To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-cancel">cancel</dfn> a <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑥">pending beacon</a> <var>beacon</var>, set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending④">is_pending</a> to false. 
+    <p class="note" role="note"><span>Note:</span> Once canceled, a <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑦">pending beacon</a>'s payload will no longer be used,
+  and it is safe for a user agent to discard that, and to cancel any associated
+  timers. However, other attributes may still be read, and so this algorithm
+  does not destroy the beacon itself.</p>
+   </div>
    <h3 class="heading settled" data-level="2.3" id="sending-beacons"><span class="secno">2.3. </span><span class="content">Sending beacons</span><a class="self-link" href="#sending-beacons"></a></h3>
-   <p>To <dfn data-dfn-type="dfn" data-noexport id="send-a-documents-beacons">send a document’s beacons<a class="self-link" href="#send-a-documents-beacons"></a></dfn>, given a Document <var>document</var>, run these steps:</p>
-   <ol>
-    <li data-md>
-     <p>For each pending beacon in <var>document</var>’s <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set①">pending beacon set</a>,</p>
-    <li data-md>
-     <p>Send beacon</p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-noexport id="send-a-queued-pending-beacon">send a queued pending beacon<a class="self-link" href="#send-a-queued-pending-beacon"></a></dfn> <var>beacon</var>, run these steps:</p>
    <p class="note" role="note"><span>Note:</span> This is written as though Fetch were used as the underlying mechanism.
 However, since these are sent out-of-band, an implementation might not use the
-actual web-exposed Fetch API, and may instead use the underlying HTTP
-primitives directly.</p>
-   <ol>
-    <li data-md>
-     <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending④">is_pending</a> flag to false.</p>
-    <li data-md>
-     <p>Check permission.</p>
-    <li data-md>
-     <p>Let <var>origin</var> be...</p>
-    <li data-md>
-     <p>Let <var>corsMode</var> be...</p>
-    <li data-md>
-     <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method①">method</a> is "GET", then send <var>beacon</var> over GET.</p>
-    <li data-md>
-     <p>Else send <var>beacon</var> over POST.</p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-noexport id="send-a-pending-beacon-over-get">send a pending beacon over GET<a class="self-link" href="#send-a-pending-beacon-over-get"></a></dfn>, given a pending beacon <var>beacon</var>:</p>
-   <ol>
-    <li data-md>
-     <p>Let <var>pairs</var> be the result of converting to a list of name-value pairs with <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload①">payload</a>.</p>
-    <li data-md>
-     <p>Let <var>query</var> be the result of running the application/x-www-form-urlencoded serializer with pairs and encoding.</p>
-    <li data-md>
-     <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url①">url</a>'s query component to <var>query</var>.</p>
-    <li data-md>
-     <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> initialized as follows:</p>
-     <dl>
-      <dt data-md>method
-      <dd data-md>
-       <p><code>GET</code></p>
-      <dt data-md>client
-      <dd data-md>
-       <p>The <a data-link-type="dfn">entry settings object</a></p>
-      <dt data-md>url
-      <dd data-md>
-       <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url②">url</a></p>
-      <dt data-md>header list
-      <dd data-md>
-       <p>headerList</p>
-      <dt data-md>origin
-      <dd data-md>
-       <p><var>origin</var></p>
-      <dt data-md>credentials mode
-      <dd data-md>
-       <p>same-origin</p>
-     </dl>
-    <li data-md>
-     <p>Fetch <var>req</var>.</p>
-   </ol>
-   <p>To <dfn data-dfn-type="dfn" data-noexport id="send-a-pending-beacon-over-post">send a pending beacon over POST<a class="self-link" href="#send-a-pending-beacon-over-post"></a></dfn>, given a pending beacon <var>beacon</var>:</p>
-   <ol>
-    <li data-md>
-     <p>Let <var>transmittedData</var> be the result of serializing <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload②">payload</a>.</p>
-    <li data-md>
-     <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request①">request</a> initialized as follows:</p>
-     <dl>
-      <dt data-md>method
-      <dd data-md>
-       <p><code>POST</code></p>
-      <dt data-md>client
-      <dd data-md>
-       <p>The <a data-link-type="dfn">entry settings object</a></p>
-      <dt data-md>url
-      <dd data-md>
-       <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url③">url</a></p>
-      <dt data-md>header list
-      <dd data-md>
-       <p>headerList</p>
-      <dt data-md>origin
-      <dd data-md>
-       <p><var>origin</var></p>
-      <dt data-md>keep-alive flag
-      <dd data-md>
-       <p>true</p>
-      <dt data-md>body
-      <dd data-md>
-       <p>transmittedData</p>
-      <dt data-md>mode
-      <dd data-md>
-       <p>corsMode</p>
-      <dt data-md>credentials mode
-      <dd data-md>
-       <p>same-origin</p>
-     </dl>
-    <li data-md>
-     <p>Fetch <var>req</var>.</p>
-   </ol>
+actual web-exposed Fetch API, and may instead use the underlying HTTP primitives
+directly.</p>
+   <div class="algorithm" data-algorithm="send a document’s beacons">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="send-a-documents-beacons">send a document’s beacons</dfn>, given a Document <var>document</var>, run these steps: 
+    <ol>
+     <li data-md>
+      <p>For each <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑧">pending beacon</a> <var>beacon</var> in <var>document</var>’s <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set①">pending beacon set</a>,</p>
+      <ol>
+       <li data-md>
+        <p>Call <a data-link-type="dfn" href="#send-a-queued-pending-beacon" id="ref-for-send-a-queued-pending-beacon">send a queued pending beacon</a> with <var>beacon</var>.</p>
+      </ol>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="send a queued pending beacon">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="send-a-queued-pending-beacon">send a queued pending beacon</dfn> <var>beacon</var>, run these steps: 
+    <ol>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑤">is_pending</a> flag is false, then return.</p>
+     <li data-md>
+      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑥">is_pending</a> flag to false.</p>
+     <li data-md>
+      <p>Check permission.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method①">method</a> is "GET", then call <a data-link-type="dfn" href="#send-a-pending-beacon-over-get" id="ref-for-send-a-pending-beacon-over-get">send a pending beacon over GET</a> with <var>beacon</var>.</p>
+     <li data-md>
+      <p>Else call <a data-link-type="dfn" href="#send-a-pending-beacon-over-post" id="ref-for-send-a-pending-beacon-over-post">send a pending beacon over POST</a> with <var>beacon</var>.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="send a pending beacon over GET">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="send-a-pending-beacon-over-get">send a pending beacon over GET</dfn>, given a pending beacon <var>beacon</var>: 
+    <ol>
+     <li data-md>
+      <p>Let <var>pairs</var> be the result of converting to a list of name-value pairs with <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload①">payload</a>.</p>
+     <li data-md>
+      <p>Let <var>query</var> be the result of running the application/x-www-form-urlencoded serializer with pairs and encoding.</p>
+     <li data-md>
+      <p>Set <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url①">url</a>'s query component to <var>query</var>.</p>
+     <li data-md>
+      <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request">request</a> initialized as follows:</p>
+      <dl>
+       <dt data-md>method
+       <dd data-md>
+        <p><code>GET</code></p>
+       <dt data-md>client
+       <dd data-md>
+        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object">entry settings object</a></p>
+       <dt data-md>url
+       <dd data-md>
+        <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url②">url</a></p>
+       <dt data-md>header list
+       <dd data-md>
+        <p>headerList</p>
+       <dt data-md>credentials mode
+       <dd data-md>
+        <p>same-origin</p>
+      </dl>
+     <li data-md>
+      <p>Fetch <var>req</var>.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="send a pending beacon over POST">
+     To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="send-a-pending-beacon-over-post">send a pending beacon over POST</dfn>, given a pending beacon <var>beacon</var>: 
+    <ol>
+     <li data-md>
+      <p>Let <var>transmittedData</var> be the result of serializing <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload②">payload</a>.</p>
+     <li data-md>
+      <p>Let <var>origin</var> be...</p>
+     <li data-md>
+      <p>Let <var>corsMode</var> be...</p>
+     <li data-md>
+      <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request①">request</a> initialized as follows:</p>
+      <dl>
+       <dt data-md>method
+       <dd data-md>
+        <p><code>POST</code></p>
+       <dt data-md>client
+       <dd data-md>
+        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object①">entry settings object</a></p>
+       <dt data-md>url
+       <dd data-md>
+        <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url③">url</a></p>
+       <dt data-md>header list
+       <dd data-md>
+        <p>headerList</p>
+       <dt data-md>origin
+       <dd data-md>
+        <p><var>origin</var></p>
+       <dt data-md>keep-alive flag
+       <dd data-md>
+        <p>true</p>
+       <dt data-md>body
+       <dd data-md>
+        <p>transmittedData</p>
+       <dt data-md>mode
+       <dd data-md>
+        <p><var>corsMode</var></p>
+       <dt data-md>credentials mode
+       <dd data-md>
+        <p>same-origin</p>
+      </dl>
+      <ol>
+       <li data-md>
+        <p>Fetch <var>req</var>.</p>
+      </ol>
+    </ol>
+   </div>
    <h2 class="heading settled" data-level="3" id="integration"><span class="secno">3. </span><span class="content">Integration with HTML</span><a class="self-link" href="#integration"></a></h2>
-   <p class="note" role="note"><span>Note:</span> The following sections modify the <a data-link-type="biblio" href="#biblio-html">[HTML]</a> standard to enable sending of beacons automatically by the user agent. These should be removed from this spec as appropriate changes are made to <a data-link-type="biblio" href="#biblio-html">[HTML]</a>.</p>
-   <p>When a document with a non-empty pending beacon set is to be discarded, send the document’s pending beacons.</p>
-   <p>When a process hosting a document with a non-empty pending beacon set crashes, send the document’s pending beacons.</p>
-   <p>When a document is to become hidden (visibility state change), run these steps:</p>
-   <ol>
-    <li data-md>
-     <p>For each pending beacon in document’s pending beacon set,</p>
-    <li data-md>
-     <p>If beacon’s timeout is not null, start a timer to run a task in timeout ms.
-Note: The user agent may choose to coalesce multiple timers in order to send multiple beacons
-at the same time.</p>
-    <li data-md>
-     <p>When the timer expires, send the beacon.</p>
-   </ol>
+   <p class="note" role="note"><span>Note:</span> The following sections modify the <a data-link-type="biblio" href="#biblio-html">[HTML]</a> standard to enable sending of
+beacons automatically by the user agent. These should be removed from this spec
+as appropriate changes are made to <a data-link-type="biblio" href="#biblio-html">[HTML]</a>.</p>
+   <p>When a document with a non-empty <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set②">pending beacon set</a> is to be discarded, <a data-link-type="dfn" href="#send-a-documents-beacons" id="ref-for-send-a-documents-beacons">send the document’s pending beacons</a>.</p>
+   <p>When a process hosting a document with a non-empty <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set③">pending beacon set</a> crashes, <a data-link-type="dfn" href="#send-a-documents-beacons" id="ref-for-send-a-documents-beacons①">send the document’s pending beacons</a>.</p>
+   <div class="algorithm" data-algorithm="on visibility state change">
+     When a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">Document</a> <var>document</var> is to become hidden (visibility state change), run these steps: 
+    <ol>
+     <li data-md>
+      <p>For each <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑨">pending beacon</a> <var>beacon</var> in <var>document</var>’s <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set④">pending beacon set</a>,</p>
+     <li data-md>
+      <p>Let <var>timeout</var> be <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout①">timeout</a>.</p>
+     <li data-md>
+      <p>If <var>timeout</var> is not null, start a timer to run a task in <var>timeout</var> ms.</p>
+      <p class="note" role="note"><span>Note:</span> The user agent may choose to coalesce multiple timers in order to send
+multiple beacons at the same time.</p>
+     <li data-md>
+      <p>When the timer expires, call <a data-link-type="dfn" href="#send-a-queued-pending-beacon" id="ref-for-send-a-queued-pending-beacon①">send a queued pending beacon</a> with <var>beacon</var>.</p>
+      <p class="note" role="note"><span>Note:</span> The pending beacons may have been sent before this time, in cases
+where the document is unloaded, or its hosting process crashes before the
+timer fires. In that case, if the user agent still reaches this step, then
+the beacons will not be sent again, as their <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑦">is_pending</a> flag will be false.</p>
+    </ol>
+   </div>
    <h2 class="heading settled" data-level="4" id="pendingbeacon-interface"><span class="secno">4. </span><span class="content">The PendingBeacon interface</span><a class="self-link" href="#pendingbeacon-interface"></a></h2>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-pendingbeaconoptions"><code><c- g>PendingBeaconOptions</c-></code></dfn> {
     <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <dfn class="dfn-paneled idl-code" data-default="&quot;POST&quot;" data-dfn-for="PendingBeaconOptions" data-dfn-type="dict-member" data-export data-type="DOMString " id="dom-pendingbeaconoptions-method"><code><c- g>method</c-></code></dfn> = "POST";
@@ -859,84 +901,112 @@ at the same time.</p>
     <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-undefined" id="ref-for-idl-undefined②"><c- b>undefined</c-></a> <a class="idl-code" data-link-type="method" href="#dom-pendingbeacon-sendnow" id="ref-for-dom-pendingbeacon-sendnow"><c- g>sendNow</c-></a>();
 };
 </pre>
-   <p>A <code class="idl"><a data-link-type="idl" href="#pendingbeacon" id="ref-for-pendingbeacon">PendingBeacon</a></code> object has an associated <dfn class="dfn-paneled" data-dfn-for="PendingBeacon" data-dfn-type="dfn" data-noexport id="pendingbeacon-beacon">beacon</dfn>, which is a <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑥">pending beacon</a>.</p>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="constructor" data-export data-lt="PendingBeacon(url, options)|constructor(url, options)" id="dom-pendingbeacon-pendingbeacon"><code>new PendingBeacon(<var>url</var>, <var>options</var>)</code></dfn> steps are:</p>
-   <ol>
-    <li data-md>
-     <p>Let <var>beacon</var> be a new <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon⑦">pending beacon</a>.</p>
-    <li data-md>
-     <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon">beacon</a> to <var>beacon</var>.</p>
-    <li data-md>
-     <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①">this</a>'s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url①">url</a></code> to <var>url</var>.</p>
-    <li data-md>
-     <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②">this</a>'s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-method" id="ref-for-dom-pendingbeacon-method①">method</a></code> to <var>options</var>’s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeaconoptions-method" id="ref-for-dom-pendingbeaconoptions-method">method</a></code>.</p>
-    <li data-md>
-     <p>If <var>options</var> has a <code class="idl"><a data-link-type="idl" href="#dom-pendingbeaconoptions-pagehidetimeout" id="ref-for-dom-pendingbeaconoptions-pagehidetimeout">pageHideTimeout</a></code> member, then set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③">this</a>'s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-pagehidetimeout" id="ref-for-dom-pendingbeacon-pagehidetimeout①">pageHideTimeout</a></code> to <var>options</var>’s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeaconoptions-pagehidetimeout" id="ref-for-dom-pendingbeaconoptions-pagehidetimeout①">pageHideTimeout</a></code>.</p>
-    <li data-md>
-     <p>Insert <var>beacon</var> into the user agent’s pending beacon set.</p>
-   </ol>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-url"><code>url</code></dfn> getter steps are to return this’s beacon’s url.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url②">url</a></code> setter steps are:</p>
-   <ol>
-    <li data-md>
-     <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑤">is_pending</a> is not true, throw an exception.</p>
-    <li data-md>
-     <p>Let <var>urlString</var> be the argument to the setter.</p>
-    <li data-md>
-     <p>If <var>urlString</var> is not a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-url-string" id="ref-for-valid-url-string">valid URL string</a>, throw an exception.</p>
-    <li data-md>
-     <p>Let <var>base</var> be the <a data-link-type="dfn">entry settings object</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#api-base-url" id="ref-for-api-base-url">API base URL</a>.</p>
-    <li data-md>
-     <p>Let <var>url</var> be the result of running the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-parser" id="ref-for-concept-url-parser">URL parser</a> on <var>urlString</var> and <var>base</var>.</p>
-    <li data-md>
-     <p>if <var>url</var> is failure, throw an exception.</p>
-    <li data-md>
-     <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-url" id="ref-for-pending-beacon-set-the-url">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url④">url</a> to <var>url</var> is false, throw an exception.</p>
-   </ol>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-method"><code>method</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑤">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon②">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method②">method</a>.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-method" id="ref-for-dom-pendingbeacon-method②">method</a></code> setter steps are:</p>
-   <ol>
-    <li data-md>
-     <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑥">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon③">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑥">is_pending</a> is not true, throw an exception.</p>
-    <li data-md>
-     <p>Let <var>method</var> be the argument to the setter.</p>
-    <li data-md>
-     <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-method" id="ref-for-pending-beacon-set-the-method">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method③">method</a> to <var>method</var> is false, throw an exception.</p>
-   </ol>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-pagehidetimeout"><code>pageHideTimeout</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑦">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon④">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout①">timeout</a>.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-pagehidetimeout" id="ref-for-dom-pendingbeacon-pagehidetimeout②">pageHideTimeout</a></code> setter steps are:</p>
-   <ol>
-    <li data-md>
-     <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑧">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑤">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑦">is_pending</a> is not true, throw an exception.</p>
-    <li data-md>
-     <p>Let <var>timeout</var> be the argument to the setter.</p>
-    <li data-md>
-     <p>If <var>timeout</var> is not a non-negative integer, throw an exception.</p>
-    <li data-md>
-     <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-timeout" id="ref-for-pending-beacon-set-the-timeout">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout②">timeout</a> to <var>timeout</var> is false, throw an exception.</p>
-   </ol>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-ispending"><code>isPending</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑨">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑥">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑧">is_pending</a> flag.</p>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-deactivate"><code>deactivate()</code></dfn> steps are:</p>
-   <ol>
-    <li data-md>
-     <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①⓪">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑦">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑨">is_pending</a> is not true, throw an exception.</p>
-    <li data-md>
-     <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①①">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑧">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①⓪">is_pending</a> to false.</p>
-   </ol>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-setdata"><code>setData(<var>data</var>)</code></dfn> steps are:</p>
-   <ol>
-    <li data-md>
-     <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①②">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑨">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①①">is_pending</a> is not true, throw an exception.</p>
-    <li data-md>
-     <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-payload" id="ref-for-pending-beacon-set-the-payload">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload③">payload</a> to <var>data</var> is false, throw an exception.</p>
-   </ol>
-   <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-sendnow"><code>sendNow()</code></dfn> steps are:</p>
-   <ol>
-    <li data-md>
-     <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①③">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①⓪">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①②">is_pending</a> is not true, throw an exception.</p>
-    <li data-md>
-     <p>queue an immediate send</p>
-   </ol>
+   <p>A <code class="idl"><a data-link-type="idl" href="#pendingbeacon" id="ref-for-pendingbeacon">PendingBeacon</a></code> object has an associated <dfn class="dfn-paneled" data-dfn-for="PendingBeacon" data-dfn-type="dfn" data-noexport id="pendingbeacon-beacon">beacon</dfn>, which is a <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon①⓪">pending beacon</a>.</p>
+   <div class="algorithm" data-algorithm="PendingBeacon(url, options)" data-algorithm-for="PendingBeacon">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="constructor" data-export data-lt="PendingBeacon(url, options)|constructor(url, options)" id="dom-pendingbeacon-pendingbeacon"><code>new PendingBeacon(<var>url</var>, <var>options</var>)</code></dfn> steps are: 
+    <ol>
+     <li data-md>
+      <p>Let <var>beacon</var> be a new <a data-link-type="dfn" href="#pending-beacon" id="ref-for-pending-beacon①①">pending beacon</a>.</p>
+     <li data-md>
+      <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon">beacon</a> to <var>beacon</var>.</p>
+     <li data-md>
+      <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①">this</a>'s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url①">url</a></code> to <var>url</var>.</p>
+     <li data-md>
+      <p>Set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this②">this</a>'s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-method" id="ref-for-dom-pendingbeacon-method①">method</a></code> to <var>options</var>’s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeaconoptions-method" id="ref-for-dom-pendingbeaconoptions-method">method</a></code>.</p>
+     <li data-md>
+      <p>If <var>options</var> has a <code class="idl"><a data-link-type="idl" href="#dom-pendingbeaconoptions-pagehidetimeout" id="ref-for-dom-pendingbeaconoptions-pagehidetimeout">pageHideTimeout</a></code> member, then set <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this③">this</a>'s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-pagehidetimeout" id="ref-for-dom-pendingbeacon-pagehidetimeout①">pageHideTimeout</a></code> to <var>options</var>’s <code class="idl"><a data-link-type="idl" href="#dom-pendingbeaconoptions-pagehidetimeout" id="ref-for-dom-pendingbeaconoptions-pagehidetimeout①">pageHideTimeout</a></code>.</p>
+     <li data-md>
+      <p>Insert <var>beacon</var> into the user agent’s pending beacon set.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="url" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-url"><code>url</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url④">url</a>. </div>
+   <div class="algorithm" data-algorithm="set url" data-algorithm-for="PendingBeacon">
+     The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url②">url</a></code> setter steps are: 
+    <ol>
+     <li data-md>
+      <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑤">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon②">beacon</a>.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑧">is_pending</a> is not true, throw an exception.</p>
+     <li data-md>
+      <p>Let <var>urlString</var> be the argument to the setter.</p>
+     <li data-md>
+      <p>If <var>urlString</var> is not a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-url-string" id="ref-for-valid-url-string">valid URL string</a>, throw an exception.</p>
+     <li data-md>
+      <p>Let <var>base</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object②">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#api-base-url" id="ref-for-api-base-url">API base URL</a>.</p>
+     <li data-md>
+      <p>Let <var>url</var> be the result of running the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-parser" id="ref-for-concept-url-parser">URL parser</a> on <var>urlString</var> and <var>base</var>.</p>
+     <li data-md>
+      <p>if <var>url</var> is failure, throw an exception.</p>
+     <li data-md>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-url" id="ref-for-pending-beacon-set-the-url">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url⑤">url</a> to <var>url</var> is false, throw an exception.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="method" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-method"><code>method</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑥">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon③">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method②">method</a>. </div>
+   <div class="algorithm" data-algorithm="set method" data-algorithm-for="PendingBeacon">
+     The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-method" id="ref-for-dom-pendingbeacon-method②">method</a></code> setter steps are: 
+    <ol>
+     <li data-md>
+      <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑦">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon④">beacon</a>.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑨">is_pending</a> is not true, throw an exception.</p>
+     <li data-md>
+      <p>Let <var>method</var> be the argument to the setter.</p>
+     <li data-md>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-method" id="ref-for-pending-beacon-set-the-method">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method③">method</a> to <var>method</var> is false, throw an exception.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="pageHideTimeout" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-pagehidetimeout"><code>pageHideTimeout</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑧">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑤">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout②">timeout</a>. </div>
+   <div class="algorithm" data-algorithm="set pageHideTimeout" data-algorithm-for="PendingBeacon">
+     The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-pagehidetimeout" id="ref-for-dom-pendingbeacon-pagehidetimeout②">pageHideTimeout</a></code> setter steps are: 
+    <ol>
+     <li data-md>
+      <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑨">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑥">beacon</a>.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①⓪">is_pending</a> is not true, throw an exception.</p>
+     <li data-md>
+      <p>Let <var>timeout</var> be the argument to the setter.</p>
+     <li data-md>
+      <p>If <var>timeout</var> is not a non-negative integer, throw an exception.</p>
+     <li data-md>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-timeout" id="ref-for-pending-beacon-set-the-timeout">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout③">timeout</a> to <var>timeout</var> is false, throw an exception.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="isPending" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-ispending"><code>isPending</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①⓪">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑦">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①①">is_pending</a> flag. </div>
+   <div class="algorithm" data-algorithm="deactivate()" data-algorithm-for="PendingBeacon">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-deactivate"><code>deactivate()</code></dfn> steps are: 
+    <ol>
+     <li data-md>
+      <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①①">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑧">beacon</a>.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①②">is_pending</a> is not true, throw an exception.</p>
+     <li data-md>
+      <p><a data-link-type="dfn" href="#pending-beacon-cancel" id="ref-for-pending-beacon-cancel">cancel</a> <var>beacon</var>.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="setData(data)" data-algorithm-for="PendingBeacon">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-setdata"><code>setData(<var>data</var>)</code></dfn> steps are: 
+    <ol>
+     <li data-md>
+      <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①②">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑨">beacon</a>.</p>
+     <li data-md>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①③">is_pending</a> is not true, throw an exception.</p>
+     <li data-md>
+      <p>Let (<var>body</var>, <var>contentType</var>) be the result of <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract" id="ref-for-concept-bodyinit-extract">extracting</a> a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#body-with-type" id="ref-for-body-with-type">body with type</a> from <var>data</var> with keepalive set to true.</p>
+     <li data-md>
+      <p>Let <var>bytes</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence②">byte sequence</a> obtained by reading <var>body</var>’s stream.</p>
+     <li data-md>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-payload" id="ref-for-pending-beacon-set-the-payload">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload③">payload</a> to <var>bytes</var> is false, throw an exception.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="sendNow()" data-algorithm-for="PendingBeacon">
+     The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="method" data-export id="dom-pendingbeacon-sendnow"><code>sendNow()</code></dfn> steps are: 
+    <ol>
+     <li data-md>
+      <p>If <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①③">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①⓪">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①④">is_pending</a> is not true, throw an exception.</p>
+     <li data-md>
+      <p>Call <a data-link-type="dfn" href="#send-a-queued-pending-beacon" id="ref-for-send-a-queued-pending-beacon②">send a queued pending beacon</a> with <var>beacon</var>.</p>
+    </ol>
+   </div>
    <h2 class="heading settled" data-level="5" id="privacy"><span class="secno">5. </span><span class="content">Privacy</span><a class="self-link" href="#privacy"></a></h2>
    <ul>
     <li data-md>
@@ -993,6 +1063,7 @@ at the same time.</p>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
    <li><a href="#pendingbeacon-beacon">beacon</a><span>, in § 4</span>
+   <li><a href="#pending-beacon-cancel">cancel</a><span>, in § 2.2</span>
    <li><a href="#dom-pendingbeacon-pendingbeacon">constructor(url, options)</a><span>, in § 4</span>
    <li><a href="#dom-pendingbeacon-deactivate">deactivate()</a><span>, in § 4</span>
    <li><a href="#pending-beacon-is_pending">is_pending</a><span>, in § 2.1</span>
@@ -1038,6 +1109,19 @@ at the same time.</p>
    <a href="https://dom.spec.whatwg.org/#concept-document">https://dom.spec.whatwg.org/#concept-document</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-concept-document">2.1. Concepts</a> <a href="#ref-for-concept-document①">(2)</a>
+    <li><a href="#ref-for-concept-document②">3. Integration with HTML</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-body-with-type">
+   <a href="https://fetch.spec.whatwg.org/#body-with-type">https://fetch.spec.whatwg.org/#body-with-type</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-body-with-type">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-bodyinit-extract">
+   <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">https://fetch.spec.whatwg.org/#concept-bodyinit-extract</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-bodyinit-extract">4. The PendingBeacon interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-request">
@@ -1052,10 +1136,25 @@ at the same time.</p>
     <li><a href="#ref-for-api-base-url">4. The PendingBeacon interface</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-entry-settings-object">
+   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object">https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-entry-settings-object">2.3. Sending beacons</a> <a href="#ref-for-entry-settings-object①">(2)</a>
+    <li><a href="#ref-for-entry-settings-object②">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-boolean">
    <a href="https://infra.spec.whatwg.org/#boolean">https://infra.spec.whatwg.org/#boolean</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-boolean">2.1. Concepts</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-byte-sequence">
+   <a href="https://infra.spec.whatwg.org/#byte-sequence">https://infra.spec.whatwg.org/#byte-sequence</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-byte-sequence">2.1. Concepts</a>
+    <li><a href="#ref-for-byte-sequence①">2.2. Updating beacons</a>
+    <li><a href="#ref-for-byte-sequence②">4. The PendingBeacon interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-ordered-set">
@@ -1141,17 +1240,21 @@ at the same time.</p>
    <li>
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-body-with-type">body with type</span>
+     <li><span class="dfn-paneled" id="term-for-concept-bodyinit-extract">extract</span>
      <li><span class="dfn-paneled" id="term-for-concept-request">request</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-api-base-url">api base url</span>
+     <li><span class="dfn-paneled" id="term-for-entry-settings-object">entry settings object</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-boolean">boolean</span>
+     <li><span class="dfn-paneled" id="term-for-byte-sequence">byte sequence</span>
      <li><span class="dfn-paneled" id="term-for-ordered-set">ordered set</span>
     </ul>
    <li>
@@ -1227,7 +1330,10 @@ at the same time.</p>
    <b><a href="#pending-beacon">#pending-beacon</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-pending-beacon">2.1. Concepts</a> <a href="#ref-for-pending-beacon①">(2)</a> <a href="#ref-for-pending-beacon②">(3)</a> <a href="#ref-for-pending-beacon③">(4)</a> <a href="#ref-for-pending-beacon④">(5)</a> <a href="#ref-for-pending-beacon⑤">(6)</a>
-    <li><a href="#ref-for-pending-beacon⑥">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon⑦">(2)</a>
+    <li><a href="#ref-for-pending-beacon⑥">2.2. Updating beacons</a> <a href="#ref-for-pending-beacon⑦">(2)</a>
+    <li><a href="#ref-for-pending-beacon⑧">2.3. Sending beacons</a>
+    <li><a href="#ref-for-pending-beacon⑨">3. Integration with HTML</a>
+    <li><a href="#ref-for-pending-beacon①⓪">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon①①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="pending-beacon-url">
@@ -1235,7 +1341,7 @@ at the same time.</p>
    <ul>
     <li><a href="#ref-for-pending-beacon-url">2.2. Updating beacons</a>
     <li><a href="#ref-for-pending-beacon-url①">2.3. Sending beacons</a> <a href="#ref-for-pending-beacon-url②">(2)</a> <a href="#ref-for-pending-beacon-url③">(3)</a>
-    <li><a href="#ref-for-pending-beacon-url④">4. The PendingBeacon interface</a>
+    <li><a href="#ref-for-pending-beacon-url④">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-url⑤">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="pending-beacon-method">
@@ -1250,15 +1356,17 @@ at the same time.</p>
    <b><a href="#pending-beacon-timeout">#pending-beacon-timeout</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-pending-beacon-timeout">2.2. Updating beacons</a>
-    <li><a href="#ref-for-pending-beacon-timeout①">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-timeout②">(2)</a>
+    <li><a href="#ref-for-pending-beacon-timeout①">3. Integration with HTML</a>
+    <li><a href="#ref-for-pending-beacon-timeout②">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-timeout③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="pending-beacon-is_pending">
    <b><a href="#pending-beacon-is_pending">#pending-beacon-is_pending</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-pending-beacon-is_pending">2.2. Updating beacons</a> <a href="#ref-for-pending-beacon-is_pending①">(2)</a> <a href="#ref-for-pending-beacon-is_pending②">(3)</a> <a href="#ref-for-pending-beacon-is_pending③">(4)</a>
-    <li><a href="#ref-for-pending-beacon-is_pending④">2.3. Sending beacons</a>
-    <li><a href="#ref-for-pending-beacon-is_pending⑤">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-is_pending⑥">(2)</a> <a href="#ref-for-pending-beacon-is_pending⑦">(3)</a> <a href="#ref-for-pending-beacon-is_pending⑧">(4)</a> <a href="#ref-for-pending-beacon-is_pending⑨">(5)</a> <a href="#ref-for-pending-beacon-is_pending①⓪">(6)</a> <a href="#ref-for-pending-beacon-is_pending①①">(7)</a> <a href="#ref-for-pending-beacon-is_pending①②">(8)</a>
+    <li><a href="#ref-for-pending-beacon-is_pending">2.2. Updating beacons</a> <a href="#ref-for-pending-beacon-is_pending①">(2)</a> <a href="#ref-for-pending-beacon-is_pending②">(3)</a> <a href="#ref-for-pending-beacon-is_pending③">(4)</a> <a href="#ref-for-pending-beacon-is_pending④">(5)</a>
+    <li><a href="#ref-for-pending-beacon-is_pending⑤">2.3. Sending beacons</a> <a href="#ref-for-pending-beacon-is_pending⑥">(2)</a>
+    <li><a href="#ref-for-pending-beacon-is_pending⑦">3. Integration with HTML</a>
+    <li><a href="#ref-for-pending-beacon-is_pending⑧">4. The PendingBeacon interface</a> <a href="#ref-for-pending-beacon-is_pending⑨">(2)</a> <a href="#ref-for-pending-beacon-is_pending①⓪">(3)</a> <a href="#ref-for-pending-beacon-is_pending①①">(4)</a> <a href="#ref-for-pending-beacon-is_pending①②">(5)</a> <a href="#ref-for-pending-beacon-is_pending①③">(6)</a> <a href="#ref-for-pending-beacon-is_pending①④">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="pending-beacon-payload">
@@ -1274,6 +1382,7 @@ at the same time.</p>
    <ul>
     <li><a href="#ref-for-document-pending-beacon-set">2.1. Concepts</a>
     <li><a href="#ref-for-document-pending-beacon-set①">2.3. Sending beacons</a>
+    <li><a href="#ref-for-document-pending-beacon-set②">3. Integration with HTML</a> <a href="#ref-for-document-pending-beacon-set③">(2)</a> <a href="#ref-for-document-pending-beacon-set④">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="pending-beacon-set-the-url">
@@ -1298,6 +1407,38 @@ at the same time.</p>
    <b><a href="#pending-beacon-set-the-payload">#pending-beacon-set-the-payload</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-pending-beacon-set-the-payload">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="pending-beacon-cancel">
+   <b><a href="#pending-beacon-cancel">#pending-beacon-cancel</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-pending-beacon-cancel">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="send-a-documents-beacons">
+   <b><a href="#send-a-documents-beacons">#send-a-documents-beacons</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-send-a-documents-beacons">3. Integration with HTML</a> <a href="#ref-for-send-a-documents-beacons①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="send-a-queued-pending-beacon">
+   <b><a href="#send-a-queued-pending-beacon">#send-a-queued-pending-beacon</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-send-a-queued-pending-beacon">2.3. Sending beacons</a>
+    <li><a href="#ref-for-send-a-queued-pending-beacon①">3. Integration with HTML</a>
+    <li><a href="#ref-for-send-a-queued-pending-beacon②">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="send-a-pending-beacon-over-get">
+   <b><a href="#send-a-pending-beacon-over-get">#send-a-pending-beacon-over-get</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-send-a-pending-beacon-over-get">2.3. Sending beacons</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="send-a-pending-beacon-over-post">
+   <b><a href="#send-a-pending-beacon-over-post">#send-a-pending-beacon-over-post</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-send-a-pending-beacon-over-post">2.3. Sending beacons</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dictdef-pendingbeaconoptions">
@@ -1434,3 +1575,87 @@ document.body.addEventListener("click", function(e) {
 
 });
 </script>
+<script>/* script-var-click-highlighting */
+
+    document.addEventListener("click", e=>{
+        if(e.target.nodeName == "VAR") {
+            highlightSameAlgoVars(e.target);
+        }
+    });
+    {
+        const indexCounts = new Map();
+        const indexNames = new Map();
+        function highlightSameAlgoVars(v) {
+            // Find the algorithm container.
+            let algoContainer = null;
+            let searchEl = v;
+            while(algoContainer == null && searchEl != document.body) {
+                searchEl = searchEl.parentNode;
+                if(searchEl.hasAttribute("data-algorithm")) {
+                    algoContainer = searchEl;
+                }
+            }
+
+            // Not highlighting document-global vars,
+            // too likely to be unrelated.
+            if(algoContainer == null) return;
+
+            const algoName = algoContainer.getAttribute("data-algorithm");
+            const varName = getVarName(v);
+            const addClass = !v.classList.contains("selected");
+            let highlightClass = null;
+            if(addClass) {
+                const index = chooseHighlightIndex(algoName, varName);
+                indexCounts.get(algoName)[index] += 1;
+                indexNames.set(algoName+"///"+varName, index);
+                highlightClass = nameFromIndex(index);
+            } else {
+                const index = previousHighlightIndex(algoName, varName);
+                indexCounts.get(algoName)[index] -= 1;
+                highlightClass = nameFromIndex(index);
+            }
+
+            // Find all same-name vars, and toggle their class appropriately.
+            for(const el of algoContainer.querySelectorAll("var")) {
+                if(getVarName(el) == varName) {
+                    el.classList.toggle("selected", addClass);
+                    el.classList.toggle(highlightClass, addClass);
+                }
+            }
+        }
+        function getVarName(el) {
+            return el.textContent.replace(/(\s|\xa0)+/, " ").trim();
+        }
+        function chooseHighlightIndex(algoName, varName) {
+            let indexes = null;
+            if(indexCounts.has(algoName)) {
+                indexes = indexCounts.get(algoName);
+            } else {
+                // 7 classes right now
+                indexes = [0,0,0,0,0,0,0];
+                indexCounts.set(algoName, indexes);
+            }
+
+            // If the element was recently unclicked,
+            // *and* that color is still unclaimed,
+            // give it back the same color.
+            const lastIndex = previousHighlightIndex(algoName, varName);
+            if(indexes[lastIndex] === 0) return lastIndex;
+
+            // Find the earliest index with the lowest count.
+            const minCount = Math.min.apply(null, indexes);
+            let index = null;
+            for(var i = 0; i < indexes.length; i++) {
+                if(indexes[i] == minCount) {
+                    return i;
+                }
+            }
+        }
+        function previousHighlightIndex(algoName, varName) {
+            return indexNames.get(algoName+"///"+varName);
+        }
+        function nameFromIndex(index) {
+            return "selected" + index;
+        }
+    }
+    </script>
