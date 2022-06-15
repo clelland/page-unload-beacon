@@ -152,8 +152,6 @@ directly.
   To <dfn>send a pending beacon over POST</dfn>, given a pending beacon |beacon|:
 
   1. Let |transmittedData| be the result of serializing |beacon|'s [=pending beacon/payload=].
-  1. Let |origin| be the <a spec="html">entry settings object</a>'s [=/origin=]
-  1. Let |corsMode| be <code>"cors"</code>.
   1. Let |req| be a new [=/request=] initialized as follows:
 
       : method
@@ -165,13 +163,13 @@ directly.
       : header list
       :: headerList
       : origin
-      :: |origin|
+      :: The <a spec="html">entry settings object</a>'s [=/origin=]
       : keep-alive flag
       :: true
       : body
       :: |transmittedData|
       : mode
-      :: |corsMode|
+      :: cors
       : credentials mode
       :: same-origin
 

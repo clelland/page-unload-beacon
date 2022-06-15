@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="http://wicg.github.io/page-unload-beacon/" rel="canonical">
-  <meta content="769f204b2c1256e43035e8b3ea61e660b26eedd0" name="document-revision">
+  <meta content="b76de109d1ca27085a623ea555cb096e16ca1939" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -815,10 +815,6 @@ directly.</p>
      <li data-md>
       <p>Let <var>transmittedData</var> be the result of serializing <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload②">payload</a>.</p>
      <li data-md>
-      <p>Let <var>origin</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object①">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin" id="ref-for-concept-origin">origin</a></p>
-     <li data-md>
-      <p>Let <var>corsMode</var> be <code>"cors"</code>.</p>
-     <li data-md>
       <p>Let <var>req</var> be a new <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request" id="ref-for-concept-request①">request</a> initialized as follows:</p>
       <dl>
        <dt data-md>method
@@ -826,7 +822,7 @@ directly.</p>
         <p><code>POST</code></p>
        <dt data-md>client
        <dd data-md>
-        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object②">entry settings object</a></p>
+        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object①">entry settings object</a></p>
        <dt data-md>url
        <dd data-md>
         <p><var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url②">url</a></p>
@@ -835,7 +831,7 @@ directly.</p>
         <p>headerList</p>
        <dt data-md>origin
        <dd data-md>
-        <p><var>origin</var></p>
+        <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object②">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin" id="ref-for-concept-origin">origin</a></p>
        <dt data-md>keep-alive flag
        <dd data-md>
         <p>true</p>
@@ -844,7 +840,7 @@ directly.</p>
         <p><var>transmittedData</var></p>
        <dt data-md>mode
        <dd data-md>
-        <p><var>corsMode</var></p>
+        <p>cors</p>
        <dt data-md>credentials mode
        <dd data-md>
         <p>same-origin</p>
