@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="http://wicg.github.io/page-unload-beacon/" rel="canonical">
-  <meta content="b76de109d1ca27085a623ea555cb096e16ca1939" name="document-revision">
+  <meta content="772383f88a2dd16678c0c9da53e51c54a585ec09" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -590,7 +590,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Page Unload Beacon</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#UD">Unofficial Proposal Draft</a>, <time class="dt-updated" datetime="2022-06-15">15 June 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#UD">Unofficial Proposal Draft</a>, <time class="dt-updated" datetime="2022-06-17">17 June 2022</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -661,6 +661,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
+      <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
      </ol>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
     <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
@@ -669,6 +670,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <main>
    <h2 class="heading settled" data-level="1" id="introduction"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#introduction"></a></h2>
    <p>This is an introduction.</p>
+   <p class="issue" id="issue-bee02d4c"><a class="self-link" href="#issue-bee02d4c"></a> This introduction needs to be more of an introduction.</p>
    <h2 class="heading settled" data-level="2" id="pending-beacon-framework"><span class="secno">2. </span><span class="content">Pending Beacon Framework</span><a class="self-link" href="#pending-beacon-framework"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="concepts"><span class="secno">2.1. </span><span class="content">Concepts</span><a class="self-link" href="#concepts"></a></h3>
    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="pending-beacon">pending beacon</dfn> represents a piece of data which has been
@@ -687,6 +689,7 @@ which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#boolean"
 In an actual implementation, this set will likely need to be stored in the user
 agent, separate from the document itself, in order to be able to send beacons
 when the document is destroyed (either by being unloaded, or because of a crash).</p>
+   <p class="issue" id="issue-a08041ae"><a class="self-link" href="#issue-a08041ae"></a> Define these to be part of the user agent formally.</p>
    <h3 class="heading settled" data-level="2.2" id="updating-beacons"><span class="secno">2.2. </span><span class="content">Updating beacons</span><a class="self-link" href="#updating-beacons"></a></h3>
    <div class="algorithm" data-algorithm="set the url" data-algorithm-for="pending beacon">
      To <dfn class="dfn-paneled" data-dfn-for="pending beacon" data-dfn-type="dfn" data-noexport id="pending-beacon-set-the-url">set the url</dfn> of a pending beacon <var>beacon</var> to a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">URL</a> <var>url</var>: 
@@ -777,6 +780,8 @@ directly.</p>
      <li data-md>
       <p>Else call <a data-link-type="dfn" href="#send-a-pending-beacon-over-post" id="ref-for-send-a-pending-beacon-over-post">send a pending beacon over POST</a> with <var>beacon</var>.</p>
     </ol>
+    <p class="issue" id="issue-5f980fb4"><a class="self-link" href="#issue-5f980fb4"></a> "Check permission" is not defined. A specific permission should be used
+here, and this should integrate with the permissions API.</p>
    </div>
    <div class="algorithm" data-algorithm="send a pending beacon over GET">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="send-a-pending-beacon-over-get">send a pending beacon over GET</dfn>, given a pending beacon <var>beacon</var>: 
@@ -850,13 +855,16 @@ directly.</p>
         <p>Fetch <var>req</var>.</p>
       </ol>
     </ol>
+    <p class="issue" id="issue-df3133ed"><a class="self-link" href="#issue-df3133ed"></a> headerList is not defined.</p>
    </div>
    <h2 class="heading settled" data-level="3" id="integration"><span class="secno">3. </span><span class="content">Integration with HTML</span><a class="self-link" href="#integration"></a></h2>
    <p class="note" role="note"><span>Note:</span> The following sections modify the <a data-link-type="biblio" href="#biblio-html">[HTML]</a> standard to enable sending of
 beacons automatically by the user agent. These should be removed from this spec
 as appropriate changes are made to <a data-link-type="biblio" href="#biblio-html">[HTML]</a>.</p>
    <p>When a document with a non-empty <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set②">pending beacon set</a> is to be discarded, <a data-link-type="dfn" href="#send-a-documents-beacons" id="ref-for-send-a-documents-beacons">send the document’s pending beacons</a>.</p>
+   <p class="issue" id="issue-b8b038f0"><a class="self-link" href="#issue-b8b038f0"></a> "discarded" is not well defined.</p>
    <p>When a process hosting a document with a non-empty <a data-link-type="dfn" href="#document-pending-beacon-set" id="ref-for-document-pending-beacon-set③">pending beacon set</a> crashes, <a data-link-type="dfn" href="#send-a-documents-beacons" id="ref-for-send-a-documents-beacons①">send the document’s pending beacons</a>.</p>
+   <p class="issue" id="issue-b08b9417"><a class="self-link" href="#issue-b08b9417"></a> The concepts of "process" and "crashes" are not well defined.</p>
    <div class="algorithm" data-algorithm="on visibility state change">
      When a <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document②">Document</a> <var>document</var> is to become hidden (visibility state change), run these steps: 
     <ol>
@@ -875,6 +883,8 @@ where the document is unloaded, or its hosting process crashes before the
 timer fires. In that case, if the user agent still reaches this step, then
 the beacons will not be sent again, as their <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑦">is_pending</a> flag will be false.</p>
     </ol>
+    <p class="issue" id="issue-fa8ec208"><a class="self-link" href="#issue-fa8ec208"></a> "visibility state change" should be more specific here, and should refer
+to specific steps in either <a data-link-type="biblio" href="#biblio-page-visibility">[PAGE-VISIBILITY]</a> or <a data-link-type="biblio" href="#biblio-html">[HTML]</a></p>
    </div>
    <h2 class="heading settled" data-level="4" id="pendingbeacon-interface"><span class="secno">4. </span><span class="content">The PendingBeacon interface</span><a class="self-link" href="#pendingbeacon-interface"></a></h2>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-pendingbeaconoptions"><code><c- g>PendingBeaconOptions</c-></code></dfn> {
@@ -915,6 +925,8 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
     </ol>
    </div>
    <div class="algorithm" data-algorithm="url" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-url"><code>url</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url③">url</a>. </div>
+   <p class="issue" id="issue-3e9e2161"><a class="self-link" href="#issue-3e9e2161"></a> Several of the algorithms below say to "throw an exception". An
+appropriate exception should be used in each case.</p>
    <div class="algorithm" data-algorithm="set url" data-algorithm-for="PendingBeacon">
      The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url②">url</a></code> setter steps are: 
     <ol>
@@ -1005,6 +1017,9 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
     </ol>
    </div>
    <h2 class="heading settled" data-level="5" id="privacy"><span class="secno">5. </span><span class="content">Privacy</span><a class="self-link" href="#privacy"></a></h2>
+   <p class="issue" id="issue-f9fb6d4e"><a class="self-link" href="#issue-f9fb6d4e"></a> This section is woefully incomplete. These all need to be fleshed out in
+enough detail to accurately describe the privacy issues and suggested or
+prescribed mitigations.</p>
    <ul>
     <li data-md>
      <p>When the network changes, drop all queued beacons</p>
@@ -1319,6 +1334,11 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
   </dl>
+  <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
+  <dl>
+   <dt id="biblio-page-visibility">[PAGE-VISIBILITY]
+   <dd>Jatinder Mann; Arvind Jain. <a href="https://www.w3.org/TR/page-visibility/"><cite>Page Visibility (Second Edition)</cite></a>. 29 October 2013. REC. URL: <a href="https://www.w3.org/TR/page-visibility/">https://www.w3.org/TR/page-visibility/</a>
+  </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def"><c- b>dictionary</c-> <a href="#dictdef-pendingbeaconoptions"><code><c- g>PendingBeaconOptions</c-></code></a> {
     <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-default="&quot;POST&quot;" data-type="DOMString " href="#dom-pendingbeaconoptions-method"><code><c- g>method</c-></code></a> = "POST";
@@ -1342,7 +1362,21 @@ the beacons will not be sent again, as their <a data-link-type="dfn" href="#pend
 </pre>
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
+   <div class="issue"> This introduction needs to be more of an introduction. <a class="issue-return" href="#issue-bee02d4c" title="Jump to section">↵</a></div>
    <div class="issue"> Add worker beacons as well? <a class="issue-return" href="#issue-fdb03e89" title="Jump to section">↵</a></div>
+   <div class="issue"> Define these to be part of the user agent formally. <a class="issue-return" href="#issue-a08041ae" title="Jump to section">↵</a></div>
+   <div class="issue"> "Check permission" is not defined. A specific permission should be used
+here, and this should integrate with the permissions API. <a class="issue-return" href="#issue-5f980fb4" title="Jump to section">↵</a></div>
+   <div class="issue"> headerList is not defined. <a class="issue-return" href="#issue-df3133ed" title="Jump to section">↵</a></div>
+   <div class="issue"> "discarded" is not well defined. <a class="issue-return" href="#issue-b8b038f0" title="Jump to section">↵</a></div>
+   <div class="issue"> The concepts of "process" and "crashes" are not well defined. <a class="issue-return" href="#issue-b08b9417" title="Jump to section">↵</a></div>
+   <div class="issue"> "visibility state change" should be more specific here, and should refer
+to specific steps in either <a data-link-type="biblio" href="#biblio-page-visibility">[PAGE-VISIBILITY]</a> or <a data-link-type="biblio" href="#biblio-html">[HTML]</a> <a class="issue-return" href="#issue-fa8ec208" title="Jump to section">↵</a></div>
+   <div class="issue"> Several of the algorithms below say to "throw an exception". An
+appropriate exception should be used in each case. <a class="issue-return" href="#issue-3e9e2161" title="Jump to section">↵</a></div>
+   <div class="issue"> This section is woefully incomplete. These all need to be fleshed out in
+enough detail to accurately describe the privacy issues and suggested or
+prescribed mitigations. <a class="issue-return" href="#issue-f9fb6d4e" title="Jump to section">↵</a></div>
   </div>
   <aside class="dfn-panel" data-for="pending-beacon">
    <b><a href="#pending-beacon">#pending-beacon</a></b><b>Referenced in:</b>

@@ -16,6 +16,7 @@ Introduction {#introduction}
 
 This is an introduction.
 
+Issue: This introduction needs to be more of an introduction.
 
 Pending Beacon Framework {#pending-beacon-framework}
 ====================================================
@@ -50,6 +51,8 @@ Note: In this spec, the [=pending beacon set=] is associated with a [=Document=]
 In an actual implementation, this set will likely need to be stored in the user
 agent, separate from the document itself, in order to be able to send beacons
 when the document is destroyed (either by being unloaded, or because of a crash).
+
+Issue: Define these to be part of the user agent formally.
 
 Updating beacons {#updating-beacons}
 ------------------------------------
@@ -124,6 +127,8 @@ directly.
   1. If |beacon|'s [=pending beacon/method=] is "GET", then call [=send a pending beacon over GET=] with |beacon|.
   1. Else call [=send a pending beacon over POST=] with |beacon|.
 
+Issue: "Check permission" is not defined. A specific permission should be used
+here, and this should integrate with the permissions API.
 </div>
 
 <div algorithm>
@@ -175,6 +180,7 @@ directly.
 
     1. Fetch |req|.
 
+Issue: headerList is not defined.
 </div>
 
 
@@ -189,9 +195,12 @@ as appropriate changes are made to [[HTML]].
 When a document with a non-empty [=pending beacon set=] is to be discarded, <a
 lt="send a document's beacons">send the document's pending beacons</a>.
 
+Issue: "discarded" is not well defined.
+
 When a process hosting a document with a non-empty [=pending beacon set=] crashes,
 <a lt="send a document's beacons">send the document's pending beacons</a>.
 
+Issue: The concepts of "process" and "crashes" are not well defined.
 
 <div algorithm="on visibility state change">
 When a [=Document=] |document| is to become hidden (visibility state change), run these steps:
@@ -211,6 +220,8 @@ When a [=Document=] |document| is to become hidden (visibility state change), ru
     the beacons will not be sent again, as their [=pending beacon/is_pending=]
     flag will be false.
 
+Issue: "visibility state change" should be more specific here, and should refer
+to specific steps in either [[PAGE-VISIBILITY]] or [[HTML]]
 </div>
 
 The PendingBeacon interface {#pendingbeacon-interface}
@@ -256,6 +267,9 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
    The <dfn attribute for="PendingBeacon"><code>url</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/url=].
 
 </div>
+
+Issue: Several of the algorithms below say to "throw an exception". An
+appropriate exception should be used in each case.
 
 <div algorithm="set url" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/url}} setter steps are:
@@ -332,6 +346,10 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 
 Privacy {#privacy}
 ==================
+
+Issue: This section is woefully incomplete. These all need to be fleshed out in
+enough detail to accurately describe the privacy issues and suggested or
+prescribed mitigations.
 
 * When the network changes, drop all queued beacons
 
