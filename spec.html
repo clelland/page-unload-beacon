@@ -8,7 +8,7 @@
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="http://wicg.github.io/page-unload-beacon/" rel="canonical">
-  <meta content="772383f88a2dd16678c0c9da53e51c54a585ec09" name="document-revision">
+  <meta content="59f24ecf2c13c1dc400d9b17c187ec3ac4b412dd" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -925,27 +925,25 @@ to specific steps in either <a data-link-type="biblio" href="#biblio-page-visibi
     </ol>
    </div>
    <div class="algorithm" data-algorithm="url" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-url"><code>url</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this④">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url③">url</a>. </div>
-   <p class="issue" id="issue-3e9e2161"><a class="self-link" href="#issue-3e9e2161"></a> Several of the algorithms below say to "throw an exception". An
-appropriate exception should be used in each case.</p>
    <div class="algorithm" data-algorithm="set url" data-algorithm-for="PendingBeacon">
      The <code class="idl"><a data-link-type="idl" href="#dom-pendingbeacon-url" id="ref-for-dom-pendingbeacon-url②">url</a></code> setter steps are: 
     <ol>
      <li data-md>
       <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑤">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon②">beacon</a>.</p>
      <li data-md>
-      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑧">is_pending</a> is not true, throw an exception.</p>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑧">is_pending</a> is not true, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#nomodificationallowederror" id="ref-for-nomodificationallowederror">"NoModificationAllowedError"</a></code> <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException">DOMException</a></code>.</p>
      <li data-md>
       <p>Let <var>urlString</var> be the argument to the setter.</p>
      <li data-md>
-      <p>If <var>urlString</var> is not a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-url-string" id="ref-for-valid-url-string">valid URL string</a>, throw an exception.</p>
+      <p>If <var>urlString</var> is not a <a data-link-type="dfn" href="https://url.spec.whatwg.org/#valid-url-string" id="ref-for-valid-url-string">valid URL string</a>, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror">TypeError</a></code>.</p>
      <li data-md>
       <p>Let <var>base</var> be the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#entry-settings-object" id="ref-for-entry-settings-object③">entry settings object</a>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#api-base-url" id="ref-for-api-base-url">API base URL</a>.</p>
      <li data-md>
       <p>Let <var>url</var> be the result of running the <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url-parser" id="ref-for-concept-url-parser">URL parser</a> on <var>urlString</var> and <var>base</var>.</p>
      <li data-md>
-      <p>if <var>url</var> is failure, throw an exception.</p>
+      <p>If <var>url</var> is failure, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①">TypeError</a></code>.</p>
      <li data-md>
-      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-url" id="ref-for-pending-beacon-set-the-url">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url④">url</a> to <var>url</var> is false, throw an exception.</p>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-url" id="ref-for-pending-beacon-set-the-url">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-url" id="ref-for-pending-beacon-url④">url</a> to <var>url</var> is false, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror②">TypeError</a></code>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="method" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-method"><code>method</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑥">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon③">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method②">method</a>. </div>
@@ -955,11 +953,11 @@ appropriate exception should be used in each case.</p>
      <li data-md>
       <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑦">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon④">beacon</a>.</p>
      <li data-md>
-      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑨">is_pending</a> is not true, throw an exception.</p>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending⑨">is_pending</a> is not true, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#nomodificationallowederror" id="ref-for-nomodificationallowederror①">"NoModificationAllowedError"</a></code> <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException①">DOMException</a></code>.</p>
      <li data-md>
       <p>Let <var>method</var> be the argument to the setter.</p>
      <li data-md>
-      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-method" id="ref-for-pending-beacon-set-the-method">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method③">method</a> to <var>method</var> is false, throw an exception.</p>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-method" id="ref-for-pending-beacon-set-the-method">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-method" id="ref-for-pending-beacon-method③">method</a> to <var>method</var> is false, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror③">TypeError</a></code>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="pageHideTimeout" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-pagehidetimeout"><code>pageHideTimeout</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑧">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑤">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout②">timeout</a>. </div>
@@ -969,13 +967,13 @@ appropriate exception should be used in each case.</p>
      <li data-md>
       <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this⑨">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑥">beacon</a>.</p>
      <li data-md>
-      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①⓪">is_pending</a> is not true, throw an exception.</p>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①⓪">is_pending</a> is not true, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#nomodificationallowederror" id="ref-for-nomodificationallowederror②">"NoModificationAllowedError"</a></code> <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException②">DOMException</a></code>.</p>
      <li data-md>
       <p>Let <var>timeout</var> be the argument to the setter.</p>
      <li data-md>
-      <p>If <var>timeout</var> is not a non-negative integer, throw an exception.</p>
+      <p>If <var>timeout</var> is not a non-negative integer, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror④">TypeError</a></code>.</p>
      <li data-md>
-      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-timeout" id="ref-for-pending-beacon-set-the-timeout">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout③">timeout</a> to <var>timeout</var> is false, throw an exception.</p>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-timeout" id="ref-for-pending-beacon-set-the-timeout">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-timeout" id="ref-for-pending-beacon-timeout③">timeout</a> to <var>timeout</var> is false, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑤">TypeError</a></code>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="isPending" data-algorithm-for="PendingBeacon"> The <dfn class="dfn-paneled idl-code" data-dfn-for="PendingBeacon" data-dfn-type="attribute" data-export id="dom-pendingbeacon-ispending"><code>isPending</code></dfn> getter steps are to return <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①⓪">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑦">beacon</a>'s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①①">is_pending</a> flag. </div>
@@ -985,7 +983,7 @@ appropriate exception should be used in each case.</p>
      <li data-md>
       <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①①">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑧">beacon</a>.</p>
      <li data-md>
-      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①②">is_pending</a> is not true, throw an exception.</p>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①②">is_pending</a> is not true, throw an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror">"InvalidStateError"</a></code> <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException③">DOMException</a></code>.</p>
      <li data-md>
       <p><a data-link-type="dfn" href="#pending-beacon-cancel" id="ref-for-pending-beacon-cancel">cancel</a> <var>beacon</var>.</p>
     </ol>
@@ -996,13 +994,13 @@ appropriate exception should be used in each case.</p>
      <li data-md>
       <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①②">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon⑨">beacon</a>.</p>
      <li data-md>
-      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①③">is_pending</a> is not true, throw an exception.</p>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①③">is_pending</a> is not true, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#nomodificationallowederror" id="ref-for-nomodificationallowederror③">"NoModificationAllowedError"</a></code> <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException④">DOMException</a></code>.</p>
      <li data-md>
       <p>Let (<var>body</var>, <var>contentType</var>) be the result of <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract" id="ref-for-concept-bodyinit-extract">extracting</a> a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#body-with-type" id="ref-for-body-with-type">body with type</a> from <var>data</var> with keepalive set to true.</p>
      <li data-md>
       <p>Let <var>bytes</var> be the <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#byte-sequence" id="ref-for-byte-sequence②">byte sequence</a> obtained by reading <var>body</var>’s stream.</p>
      <li data-md>
-      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-payload" id="ref-for-pending-beacon-set-the-payload">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload③">payload</a> to <var>bytes</var> is false, throw an exception.</p>
+      <p>If the result of <a data-link-type="dfn" href="#pending-beacon-set-the-payload" id="ref-for-pending-beacon-set-the-payload">setting</a> <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-payload" id="ref-for-pending-beacon-payload③">payload</a> to <var>bytes</var> is false, throw a <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑥">TypeError</a></code>.</p>
     </ol>
    </div>
    <div class="algorithm" data-algorithm="sendNow()" data-algorithm-for="PendingBeacon">
@@ -1011,7 +1009,7 @@ appropriate exception should be used in each case.</p>
      <li data-md>
       <p>Let <var>beacon</var> be <a data-link-type="dfn" href="https://webidl.spec.whatwg.org/#this" id="ref-for-this①③">this</a>'s <a data-link-type="dfn" href="#pendingbeacon-beacon" id="ref-for-pendingbeacon-beacon①⓪">beacon</a>.</p>
      <li data-md>
-      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①④">is_pending</a> is not true, throw an exception.</p>
+      <p>If <var>beacon</var>’s <a data-link-type="dfn" href="#pending-beacon-is_pending" id="ref-for-pending-beacon-is_pending①④">is_pending</a> is not true, throw an <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#invalidstateerror" id="ref-for-invalidstateerror①">"InvalidStateError"</a></code> <code class="idl"><a data-link-type="idl" href="https://webidl.spec.whatwg.org/#idl-DOMException" id="ref-for-idl-DOMException⑤">DOMException</a></code>.</p>
      <li data-md>
       <p>Call <a data-link-type="dfn" href="#send-a-queued-pending-beacon" id="ref-for-send-a-queued-pending-beacon②">send a queued pending beacon</a> with <var>beacon</var>.</p>
     </ol>
@@ -1218,6 +1216,12 @@ prescribed mitigations.</p>
     <li><a href="#ref-for-valid-url-string">4. The PendingBeacon interface</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-DOMException">
+   <a href="https://webidl.spec.whatwg.org/#idl-DOMException">https://webidl.spec.whatwg.org/#idl-DOMException</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-DOMException">4. The PendingBeacon interface</a> <a href="#ref-for-idl-DOMException①">(2)</a> <a href="#ref-for-idl-DOMException②">(3)</a> <a href="#ref-for-idl-DOMException③">(4)</a> <a href="#ref-for-idl-DOMException④">(5)</a> <a href="#ref-for-idl-DOMException⑤">(6)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-DOMString">
    <a href="https://webidl.spec.whatwg.org/#idl-DOMString">https://webidl.spec.whatwg.org/#idl-DOMString</a><b>Referenced in:</b>
    <ul>
@@ -1228,6 +1232,24 @@ prescribed mitigations.</p>
    <a href="https://webidl.spec.whatwg.org/#Exposed">https://webidl.spec.whatwg.org/#Exposed</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-Exposed">4. The PendingBeacon interface</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-invalidstateerror">
+   <a href="https://webidl.spec.whatwg.org/#invalidstateerror">https://webidl.spec.whatwg.org/#invalidstateerror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-invalidstateerror">4. The PendingBeacon interface</a> <a href="#ref-for-invalidstateerror①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-nomodificationallowederror">
+   <a href="https://webidl.spec.whatwg.org/#nomodificationallowederror">https://webidl.spec.whatwg.org/#nomodificationallowederror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-nomodificationallowederror">4. The PendingBeacon interface</a> <a href="#ref-for-nomodificationallowederror①">(2)</a> <a href="#ref-for-nomodificationallowederror②">(3)</a> <a href="#ref-for-nomodificationallowederror③">(4)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
+   <a href="https://webidl.spec.whatwg.org/#exceptiondef-typeerror">https://webidl.spec.whatwg.org/#exceptiondef-typeerror</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-exceptiondef-typeerror">4. The PendingBeacon interface</a> <a href="#ref-for-exceptiondef-typeerror①">(2)</a> <a href="#ref-for-exceptiondef-typeerror②">(3)</a> <a href="#ref-for-exceptiondef-typeerror③">(4)</a> <a href="#ref-for-exceptiondef-typeerror④">(5)</a> <a href="#ref-for-exceptiondef-typeerror⑤">(6)</a> <a href="#ref-for-exceptiondef-typeerror⑥">(7)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
@@ -1305,8 +1327,12 @@ prescribed mitigations.</p>
    <li>
     <a data-link-type="biblio">[WEBIDL]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-idl-DOMException">DOMException</span>
      <li><span class="dfn-paneled" id="term-for-idl-DOMString">DOMString</span>
      <li><span class="dfn-paneled" id="term-for-Exposed">Exposed</span>
+     <li><span class="dfn-paneled" id="term-for-invalidstateerror">InvalidStateError</span>
+     <li><span class="dfn-paneled" id="term-for-nomodificationallowederror">NoModificationAllowedError</span>
+     <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror">TypeError</span>
      <li><span class="dfn-paneled" id="term-for-idl-boolean">boolean</span>
      <li><span class="dfn-paneled" id="term-for-idl-object">object</span>
      <li><span class="dfn-paneled" id="term-for-this">this</span>
@@ -1372,8 +1398,6 @@ here, and this should integrate with the permissions API. <a class="issue-return
    <div class="issue"> The concepts of "process" and "crashes" are not well defined. <a class="issue-return" href="#issue-b08b9417" title="Jump to section">↵</a></div>
    <div class="issue"> "visibility state change" should be more specific here, and should refer
 to specific steps in either <a data-link-type="biblio" href="#biblio-page-visibility">[PAGE-VISIBILITY]</a> or <a data-link-type="biblio" href="#biblio-html">[HTML]</a> <a class="issue-return" href="#issue-fa8ec208" title="Jump to section">↵</a></div>
-   <div class="issue"> Several of the algorithms below say to "throw an exception". An
-appropriate exception should be used in each case. <a class="issue-return" href="#issue-3e9e2161" title="Jump to section">↵</a></div>
    <div class="issue"> This section is woefully incomplete. These all need to be fleshed out in
 enough detail to accurately describe the privacy issues and suggested or
 prescribed mitigations. <a class="issue-return" href="#issue-f9fb6d4e" title="Jump to section">↵</a></div>

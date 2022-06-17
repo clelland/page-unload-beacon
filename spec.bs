@@ -268,19 +268,16 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 
 </div>
 
-Issue: Several of the algorithms below say to "throw an exception". An
-appropriate exception should be used in each case.
-
 <div algorithm="set url" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/url}} setter steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let |urlString| be the argument to the setter.
-  1. If |urlString| is not a [=valid URL string=], throw an exception.
+  1. If |urlString| is not a [=valid URL string=], throw a {{TypeError}}.
   1. Let |base| be the <a spec="html">entry settings object</a>'s [=API base URL=].
   1. Let |url| be the result of running the [=URL parser=] on |urlString| and |base|.
-  1. if |url| is failure, throw an exception.
-  1. If the result of <a lt="set the url">setting</a> |beacon|'s [=pending beacon/url=] to |url| is false, throw an exception.
+  1. If |url| is failure, throw a {{TypeError}}.
+  1. If the result of <a lt="set the url">setting</a> |beacon|'s [=pending beacon/url=] to |url| is false, throw a {{TypeError}}.
 
 </div>
 
@@ -292,9 +289,9 @@ appropriate exception should be used in each case.
 <div algorithm="set method" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/method}} setter steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let |method| be the argument to the setter.
-  1. If the result of <a lt="set the method">setting</a> |beacon|'s [=pending beacon/method=] to |method| is false, throw an exception.
+  1. If the result of <a lt="set the method">setting</a> |beacon|'s [=pending beacon/method=] to |method| is false, throw a {{TypeError}}.
 
 </div>
 
@@ -306,10 +303,10 @@ appropriate exception should be used in each case.
 <div algorithm="set pageHideTimeout" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/pageHideTimeout}} setter steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let |timeout| be the argument to the setter.
-  1. If |timeout| is not a non-negative integer, throw an exception.
-  1. If the result of <a lt="set the timeout">setting</a> |beacon|'s [=pending beacon/timeout=] to |timeout| is false, throw an exception.
+  1. If |timeout| is not a non-negative integer, throw a {{TypeError}}.
+  1. If the result of <a lt="set the timeout">setting</a> |beacon|'s [=pending beacon/timeout=] to |timeout| is false, throw a {{TypeError}}.
 
 </div>
 
@@ -321,7 +318,7 @@ appropriate exception should be used in each case.
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>deactivate()</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an {{"InvalidStateError"}} {{DOMException}}.
   1. [=pending beacon/cancel=] |beacon|.
 
 </div>
@@ -329,17 +326,17 @@ appropriate exception should be used in each case.
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>setData(|data|)</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let (|body|, <var ignore>contentType</var>) be the result of <a for="BodyInit" lt="extract">extracting</a> a [=body with type=] from |data| with keepalive set to true.
   1. Let |bytes| be the [=byte sequence=] obtained by reading |body|'s stream.
-  1. If the result of <a lt="set the payload">setting</a> |beacon|'s [=pending beacon/payload=] to |bytes| is false, throw an exception.
+  1. If the result of <a lt="set the payload">setting</a> |beacon|'s [=pending beacon/payload=] to |bytes| is false, throw a {{TypeError}}.
 
 </div>
 
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>sendNow()</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an exception.
+  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an {{"InvalidStateError"}} {{DOMException}}.
   1. Call [=send a queued pending beacon=] with |beacon|.
 
 </div>
