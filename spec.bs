@@ -36,8 +36,16 @@ string, which is initally <code>"POST"</code>.
 A [=pending beacon=] has a <dfn for="pending beacon">timeout</dfn>, which is
 either null or an integer, and which is initially null.
 
-A [=pending beacon=] has an <dfn for="pending beacon">is_pending</dfn> flag,
-which is a [=boolean=], which is initially true.
+A [=pending beacon=] has a <dfn for="pending beacon">state</dfn>, which is one
+of the following values:
+
+ * "pending"
+ * "sending"
+ * "sent"
+ * "failed"
+ * "deactivated"
+
+It is initally "pending".
 
 A [=pending beacon=] has a <dfn for="pending beacon">payload</dfn>, which is a
 [=byte sequence=].  It is initially empty.
@@ -59,7 +67,7 @@ Updating beacons {#updating-beacons}
 
 <div algorithm>
   To <dfn for="pending beacon">set the url</dfn> of a pending beacon |beacon| to a [=/URL=] |url|:
-  1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", return false.
   1. If |url| is not a valid [=/URL=], return false.
   1. If |url| is not a [=potentially trustworthy URL=], return false.
   1. Set |beacon|'s [=pending beacon/url=] to |url|.
@@ -69,7 +77,7 @@ Updating beacons {#updating-beacons}
 
 <div algorithm>
   To <dfn for="pending beacon">set the method</dfn> of a pending beacon |beacon| to a string |method|:
-  1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", return false.
   1. If |method| is not a case-insensitive match for <code>"GET"</code> or <code>"POST"</code>, return false.
   1. Set |beacon|'s [=pending beacon/method=] to |method|.
   1. Return true.
@@ -78,7 +86,7 @@ Updating beacons {#updating-beacons}
 
 <div algorithm>
   To <dfn for="pending beacon">set the timeout</dfn> of a pending beacon |beacon| to an integer |timeout|:
-  1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", return false.
   1. If |timeout| is negative, return false.
   1. Set |beacon|'s [=pending beacon/timeout=] to |timeout|.
   1. Return true.
@@ -87,14 +95,14 @@ Updating beacons {#updating-beacons}
 
 <div algorithm>
   To <dfn for="pending beacon">set the payload</dfn> of a pending beacon |beacon| to a [=byte sequence=] |payload|,
-  1. If |beacon|'s [=pending beacon/is_pending=] is false, return false.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", return false.
   1. Set |beacon|'s [=pending beacon/payload=] to |payload|.
   1. Return true.
 
 </div>
 
 <div algorithm>
-  To <dfn for="pending beacon">cancel</dfn> a [=pending beacon=] |beacon|, set |beacon|'s [=pending beacon/is_pending=] to false.
+  To <dfn for="pending beacon">cancel</dfn> a [=pending beacon=] |beacon|, set |beacon|'s [=pending beacon/state=] to "deactivated".
 
   Note: Once canceled, a [=pending beacon=]'s payload will no longer be used,
   and it is safe for a user agent to discard that, and to cancel any associated
@@ -121,8 +129,8 @@ directly.
 <div algorithm>
    To <dfn>send a queued pending beacon</dfn> |beacon|, run these steps:
 
-  1. If |beacon|'s [=pending beacon/is_pending=] flag is false, then return.
-  1. Set |beacon|'s [=pending beacon/is_pending=] flag to false.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", then return.
+  1. Set |beacon|'s [=pending beacon/state=] flag to "sending".
   1. Check permission.
   1. If |beacon|'s [=pending beacon/method=] is "GET", then call [=send a pending beacon over GET=] with |beacon|.
   1. Else call [=send a pending beacon over POST=] with |beacon|.
@@ -149,7 +157,10 @@ here, and this should integrate with the permissions API.
       : credentials mode
       :: same-origin
 
-  1. Fetch |req|.
+  1. If the result of calling [=/HTTP fetch=] with |req| is not a
+    [=network error=], set |beacon|'s [=pending beacon/state=] to "sent".
+
+  1. Otherwise, set |beacon|'s [=pending beacon/state=] to "failed".
 
 </div>
 
@@ -178,7 +189,10 @@ here, and this should integrate with the permissions API.
       : credentials mode
       :: same-origin
 
-    1. Fetch |req|.
+  1. If the result of calling [=/HTTP fetch=] with |req| is not a
+    [=network error=], set |beacon|'s [=pending beacon/state=] to "sent".
+
+  1. Otherwise, set |beacon|'s [=pending beacon/state=] to "failed".
 
 Issue: headerList is not defined.
 </div>
@@ -217,8 +231,8 @@ When a [=Document=] |document| is to become hidden (visibility state change), ru
     Note: The pending beacons may have been sent before this time, in cases
     where the document is unloaded, or its hosting process crashes before the
     timer fires. In that case, if the user agent still reaches this step, then
-    the beacons will not be sent again, as their [=pending beacon/is_pending=]
-    flag will be false.
+    the beacons will not be sent again, as their [=pending beacon/state=]
+    will no longer be "pending".
 
 Issue: "visibility state change" should be more specific here, and should refer
 to specific steps in either [[PAGE-VISIBILITY]] or [[HTML]]
@@ -240,7 +254,7 @@ interface PendingBeacon {
     attribute DOMString url;
     attribute DOMString method;
     attribute unsigned long pageHideTimeout;
-    readonly attribute boolean isPending;
+    readonly attribute DOMString state;
 
     undefined deactivate();
     undefined setData(object data);
@@ -271,7 +285,7 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 <div algorithm="set url" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/url}} setter steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let |urlString| be the argument to the setter.
   1. If |urlString| is not a [=valid URL string=], throw a {{TypeError}}.
   1. Let |base| be the <a spec="html">entry settings object</a>'s [=API base URL=].
@@ -289,7 +303,7 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 <div algorithm="set method" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/method}} setter steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let |method| be the argument to the setter.
   1. If the result of <a lt="set the method">setting</a> |beacon|'s [=pending beacon/method=] to |method| is false, throw a {{TypeError}}.
 
@@ -303,7 +317,7 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 <div algorithm="set pageHideTimeout" data-algorithm-for="PendingBeacon">
   The {{PendingBeacon/pageHideTimeout}} setter steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let |timeout| be the argument to the setter.
   1. If |timeout| is not a non-negative integer, throw a {{TypeError}}.
   1. If the result of <a lt="set the timeout">setting</a> |beacon|'s [=pending beacon/timeout=] to |timeout| is false, throw a {{TypeError}}.
@@ -311,14 +325,14 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 </div>
 
 <div algorithm>
-  The <dfn attribute for="PendingBeacon"><code>isPending</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/is_pending=] flag.
+  The <dfn attribute for="PendingBeacon"><code>state</code></dfn> getter steps are to return [=this=]'s [=PendingBeacon/beacon=]'s [=pending beacon/state=].
 
 </div>
 
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>deactivate()</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an {{"InvalidStateError"}} {{DOMException}}.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", throw an {{"InvalidStateError"}} {{DOMException}}.
   1. [=pending beacon/cancel=] |beacon|.
 
 </div>
@@ -326,7 +340,7 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>setData(|data|)</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw a {{"NoModificationAllowedError"}} {{DOMException}}.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", throw a {{"NoModificationAllowedError"}} {{DOMException}}.
   1. Let (|body|, <var ignore>contentType</var>) be the result of <a for="BodyInit" lt="extract">extracting</a> a [=body with type=] from |data| with keepalive set to true.
   1. Let |bytes| be the [=byte sequence=] obtained by reading |body|'s stream.
   1. If the result of <a lt="set the payload">setting</a> |beacon|'s [=pending beacon/payload=] to |bytes| is false, throw a {{TypeError}}.
@@ -336,7 +350,7 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
 <div algorithm>
   The <dfn method for="PendingBeacon"><code>sendNow()</code></dfn> steps are:
   1. Let |beacon| be [=this=]'s [=PendingBeacon/beacon=].
-  1. If |beacon|'s [=pending beacon/is_pending=] is not true, throw an {{"InvalidStateError"}} {{DOMException}}.
+  1. If |beacon|'s [=pending beacon/state=] is not "pending", throw an {{"InvalidStateError"}} {{DOMException}}.
   1. Call [=send a queued pending beacon=] with |beacon|.
 
 </div>
