@@ -228,17 +228,22 @@ The PendingBeacon interface {#pendingbeacon-interface}
 ======================================================
 
 <pre class=idl>
+enum BeaconMethod {
+    "POST",
+    "GET"
+};
+
 dictionary PendingBeaconOptions {
-    DOMString method = "POST";
+    BeaconMethod method = "POST";
     unsigned long pageHideTimeout;
 };
 
 [Exposed=(Window, Worker)]
 interface PendingBeacon {
-    constructor(DOMString url, PendingBeaconOptions options);
+    constructor(USVString url, optional PendingBeaconOptions options = {});
 
-    attribute DOMString url;
-    attribute DOMString method;
+    attribute USVString url;
+    attribute BeaconMethod method;
     attribute unsigned long pageHideTimeout;
     readonly attribute boolean isPending;
 
@@ -256,7 +261,9 @@ A {{PendingBeacon}} object has an associated <dfn for=PendingBeacon>beacon</dfn>
   1. Let |beacon| be a new [=pending beacon=].
   1. Set [=this=]'s [=PendingBeacon/beacon=] to |beacon|.
   1. Set [=this=]'s {{PendingBeacon/url}} to |url|.
-  1. Set [=this=]'s {{PendingBeacon/method}} to |options|'s {{PendingBeaconOptions/method}}.
+  1. If |options| has a {{PendingBeaconOptions/method}} member, then set
+      [=this=]'s {{PendingBeacon/method}} to |options|'s
+      {{PendingBeaconOptions/method}}.
   1. If |options| has a {{PendingBeaconOptions/pageHideTimeout}} member, then set [=this=]'s
       {{PendingBeacon/pageHideTimeout}} to |options|'s {{PendingBeaconOptions/pageHideTimeout}}.
   1. Insert |beacon| into the user agent's pending beacon set.
